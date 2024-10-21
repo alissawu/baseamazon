@@ -13,7 +13,7 @@ login.login_view = 'users.login'
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.register_blueprint(wishlist_bp)
+    
 
     app.db = DB(app)
     login.init_app(app)
@@ -23,5 +23,11 @@ def create_app():
 
     from .users import bp as user_bp
     app.register_blueprint(user_bp)
+
+    from .wishlist import bp as wishlist_bp
+    app.register_blueprint(wishlist_bp)
+
+    from .feedback import bp as feedback_bp
+    app.register_blueprint(feedback_bp)
 
     return app

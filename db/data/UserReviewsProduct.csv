@@ -1,0 +1,6 @@
+id,customer_id,product_id,rating_num,rating_message,review_date
+1,1,101,5,Great product!,2024-10-21 18:49:15.617267
+2,2,102,3,Average quality.,2024-10-20 18:49:15.617275
+3,1,103,4,Good value for money.,2024-10-19 18:49:15.617277
+4,3,104,2,Not satisfied.,2024-10-18 18:49:15.617280
+5,2,105,1,Very poor quality.,2024-10-17 18:49:15.617281
