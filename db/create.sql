@@ -22,3 +22,12 @@ CREATE TABLE Purchases (
     pid INT NOT NULL REFERENCES Products(id),
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
+
+/*links a user (uid), a product, and the time a product was added*/
+/*unique id, user id, product id, time added*/
+CREATE TABLE Wishes (
+    id SERIAL PRIMARY KEY,
+    uid INT REFERENCES Users(uid),
+    product_id INT REFERENCES Products(id),
+    time_added TIMESTAMP NOT NULL
+);
