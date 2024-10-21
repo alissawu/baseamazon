@@ -43,11 +43,11 @@ RETURNING id
             return None
 #do later
     @staticmethod
-    def remove(id):
+    def remove(uid, product_id):
         try:
             app.db.execute('''
 DELETE FROM Wishes
-WHERE id = :id
-''', id=id)
+WHERE uid = :uid AND pid = :product_id
+''', uid=uid, product_id=product_id)
         except Exception as e:
             print(str(e))

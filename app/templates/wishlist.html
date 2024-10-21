@@ -1,28 +1,46 @@
 {% extends "base.html" %}
 
-{% block content %}
-  <h2>Your Wishlist</h2>
+{% block msg %}
+  <h1 style="color: aliceblue;">Your Wishlist</h1>
+  <div style="color: aliceblue; text-align: right; margin-bottom: 25px;">
+    {% if current_user.is_authenticated %}
+      Hello {{ current_user.firstname }}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+    {% else %}
+      <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+    {% endif %}
+  </div>
+{% endblock %}
 
-  {% if items %}
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Product ID</th>
-          <th scope="col">Time Added</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-        <tr>
-          <td>{{ item.product_id }}</td>
-          <td>{{ humanize_time(item.time_added) }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>Your wishlist is currently empty.</p>
-  {% endif %}
-  
-  <a href="{{ url_for('index.index') }}" class="btn btn-primary">Continue Shopping</a>
+{% block content %}
+  <div class="container mt-5">
+    {% if items %}
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Product ID</th>
+            <th scope="col">Time Added</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>
+              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.pid }}</a>
+            </td>
+            <td>{{ item.time_added | humanize_time }}</td>
+            <td>
+              <form action="{{ url_for('wishlist.wishlist_remove', product_id=item.pid) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Your wishlist is currently empty.</p>
+    {% endif %}
+    <a href="{{ url_for('index.index') }}" class="btn btn-primary mt-3">Continue Shopping</a>
+  </div>
 {% endblock %}
