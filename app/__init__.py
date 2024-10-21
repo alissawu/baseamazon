@@ -2,6 +2,8 @@ from flask import Flask
 from flask_login import LoginManager
 from .config import Config
 from .db import DB
+from app.wishlist import bp as wishlist_bp
+
 
 
 login = LoginManager()
@@ -11,6 +13,7 @@ login.login_view = 'users.login'
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.register_blueprint(wishlist_bp)
 
     app.db = DB(app)
     login.init_app(app)
