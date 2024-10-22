@@ -23,9 +23,9 @@ WHERE id = :id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT Products.id, Products.name, Products.price, Products.available, Sellers.acct_id, Sellers.product_id
+SELECT Products.id, Products.name, Products.price, Products.available, Seller.acct_id, Seller.product_id
 FROM Products
-JOIN Sellers ON Sellers.product_id = Products.id
+JOIN Seller ON Seller.product_id = Products.id
 WHERE available = :available
 ''',
                               available=available)
