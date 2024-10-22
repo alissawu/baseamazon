@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user
 from app.models.product import Product
-from app.sellers import Seller
+from flask import current_app as app
 
 bp = Blueprint('sellers', __name__)
 
