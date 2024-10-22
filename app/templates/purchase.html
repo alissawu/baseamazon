@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block msg %}
-  <h1 style="color: aliceblue;">Your Wishlist</h1>
+  <h1 style="color: aliceblue;">Your Purchases</h1>
   <div style="color: aliceblue; text-align: right; margin-bottom: 25px;">
     {% if current_user.is_authenticated %}
       Hello {{ current_user.firstname }}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
@@ -36,9 +36,9 @@
             <td>
               <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.product_price }}</a>
             </td>            
-            <td>{{ item.time_added | humanize_time }}</td>
+            <td>{{ item.time_purchased | humanize_time }}</td>
             <td>
-              <form action="{{ url_for('wishlist.wishlist_remove', product_id=item.pid) }}" method="post" style="display:inline;">
+              <form action="{{ url_for('purchase.purchase_remove', product_id=item.pid) }}" method="post" style="display:inline;">
                 <button type="submit" class="btn btn-danger btn-sm">Remove</button>
               </form>
             </td>
@@ -47,7 +47,7 @@
         </tbody>
       </table>
     {% else %}
-      <p>Your wishlist is currently empty.</p>
+      <p>No recent purchases.</p>
     {% endif %}
     <a href="{{ url_for('index.index') }}" class="btn btn-primary mt-3">Continue Shopping</a>
   </div>

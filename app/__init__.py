@@ -4,6 +4,11 @@ from .config import Config
 from .db import DB
 from app.wishlist import bp as wishlist_bp
 
+from app.purchase import bp as purchase_bp
+
+app = Flask(__name__)
+
+
 
 
 login = LoginManager()
@@ -32,5 +37,11 @@ def create_app():
 
     from .product import bp as product_bp
     app.register_blueprint(product_bp)
+
+    from .purchase import bp as purchase_bp
+    app.register_blueprint(purchase_bp)
+
+
+    
 
     return app

@@ -1,11 +1,13 @@
 from flask import current_app as app
 
 class WishlistItem:
-    def __init__(self, id, uid, pid, time_added):
+    def __init__(self, id, uid, pid, time_added, product_name, product_price):
         self.id = id
         self.uid = uid  
         self.pid = pid  
         self.time_added = time_added  
+        self.product_name = product_name
+        self.product_price = product_price
     # fetches specific wishlist item from db by ID
     @staticmethod
     def get(id):
@@ -21,10 +23,11 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid(uid):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_added
-FROM Wishes
-WHERE uid = :uid
-ORDER BY time_added DESC
+SELECT W.id, W.uid, W.pid, W.time_added, P.name, P.price
+FROM Wishes W
+JOIN Products P ON W.pid = P.id
+WHERE W.uid = :uid
+ORDER BY W.time_added DESC
 ''', uid=uid)
         return [WishlistItem(*row) for row in rows]
 
