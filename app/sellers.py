@@ -14,12 +14,13 @@ def sellers():
     else:
         return redirect(url_for('users.login'))
 
-@bp.route('/sellers/<int:user_id>', methods=['POST'])
+@bp.route('/sellers/<int:acct_ID>', methods=['POST'])
 class Seller:
-    def __init__(self, acct_ID, product_ID, product_name, price, available):
+    def __init__(self, acct_ID, product_ID, id, name, price, available):
         self.acct_ID = acct_ID
         self.product_ID = product_ID
-        self.product_name = product_name
+        self.id = id
+        self.name = name
         self.price = price
         self.available = available
 
@@ -27,9 +28,9 @@ class Seller:
     # query for products based on the seller id
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
-        SELECT Seller.acct_ID, Products.ID, Products.name, Products.price, Products.available
+        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
         FROM Seller
-        JOIN Products ON Seller.product_ID = Products.ID
+        JOIN Products ON Products.id = Seller.poduct_ID
         WHERE Seller.acct_ID = :acct_ID
         ''', acct_ID=acct_ID)
 
