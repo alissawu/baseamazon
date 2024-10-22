@@ -59,9 +59,30 @@
     {% endfor %}
   </tbody>
 </table>
-<a href="{{ url_for('sellers.sellers_inventory') }}">
-  <button>Sellers' Inventory</button>
-</a>
+<h2>Sellers' Products:</h2>
+<div class="search">
+  <label for="searchOrder">Search ID:</label>
+    <input type="text" placeholder="Search.." />
+    <button type="button" onclick="submitSearchForm()">Search</button>
+    <button type="button" onclick="clearSearchForm()">Clear</button>
+</div>
+<table class="table table-hover table-bordered container">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Account ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in avail_products %}
+      <tr>
+        <th scope="row">{{ seller.acct_id }}</th>
+        <td>{{ seller.product_id }}</td>
+        <td>{{ seller.name }}</td>
+    {% endfor %}
+  </tbody>
+</table>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}

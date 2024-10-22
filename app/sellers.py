@@ -12,34 +12,6 @@ def sellers_inventory():
     return render_template('sellers.html')
 
 class Seller:
-    def __init__(self, id, name, price, available):
-        self.id = id
-        self.name = name
-        self.price = price
-        self.available = available
-        
-    @staticmethod
-    def get(id):
-        rows = app.db.execute('''
-        SELECT id, name, price, available
-        FROM Products
-        WHERE id = :id
-        ''',
-                              id=id)
-        return Product(*(rows[0])) if rows is not None else None
-        
-    @staticmethod
-    def get_all(available=True):
-        rows = app.db.execute('''
-        SELECT id, name, price, available
-        FROM Products
-        WHERE available = :available
-        ''',
-                              available=available)
-        return [Product(*row) for row in rows]
-    
-    
-    '''
     def __init__(self, acct_id, product_id, product_name):
         self.acct_id = acct_id
         self.product_id = product_id
@@ -55,5 +27,3 @@ class Seller:
         , acct_id=acct_id)
 
         return [Product(*row) for row in rows]
-
-    '''
