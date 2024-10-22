@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, jsonify
+from flask import Blueprint, render_template, redirect, url_for, jsonify, request
 from flask_login import current_user
 from humanize import naturaltime
 from app.models.product import Product
@@ -6,7 +6,7 @@ from flask import current_app as app
 
 bp = Blueprint('sellers', __name__)
 
-@bp.route('/sellers/<int:user_id>', methods=['GET'])
+@bp.route('/sellers/<int:user_id>', methods=['POST'])
 class Seller:
     def __init__(self, acct_id, product_id):
         self.acct_id = acct_id
@@ -26,3 +26,7 @@ class Seller:
         product = [Product(*row) for row in rows]
         
         return jsonify(product)
+
+    def submit():
+        id = request.form.get('Account ID')  # 
+        return get_products_by_seller_id(id)
