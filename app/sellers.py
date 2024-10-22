@@ -6,6 +6,14 @@ from flask import current_app as app
 
 bp = Blueprint('sellers', __name__)
 
+# add authentication
+@bp.route('/sellers')
+def sellers():
+    if current_user.is_authenticated:
+        return render_template('sellers.html', items=items, humanize_time=humanize_time)
+    else:
+        return redirect(url_for('users.login'))
+
 @bp.route('/sellers/<int:user_id>', methods=['POST'])
 class Seller:
     def __init__(self, acct_id, product_id, product_name, price, available):
