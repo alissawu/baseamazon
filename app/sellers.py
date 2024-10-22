@@ -8,27 +8,30 @@ bp = Blueprint('sellers', __name__)
 
 @bp.route('/sellers/<int:user_id>', methods=['POST'])
 class Seller:
-    def __init__(self, acct_id, product_id):
+    def __init__(self, acct_id, product_id, product_name, price, available):
         self.acct_id = acct_id
         self.product_id = product_id
+        self.product_name = product_name
+        self.price = price
+        self.available = available
 
     @staticmethod
     # query for products based on the seller id
-    def get_products_by_seller_id(seller_id):
+    def get_products_by_seller_id(acct_id):
         rows = app.db.execute('''
         SELECT Seller.acct_id, Products.id, Products.name, Products.price, Products.available
         FROM Seller
         JOIN Products ON Seller.product_id = Products.id
         WHERE Seller.acct_id = :acct_id
-        ''', acct_id=seller_id)
+        ''', acct_id=acct_id)
 
         # Convert rows into a list of dictionaries
-        product = [Product(*row) for row in rows]
+        products = [Product(*row) for row in rows]
         
-        return jsonify(product)
+        return jsonify(products)
 
 # implement search
-@bp.route('/sellers/<int:user_id>', methods=['GET'])
-def get_seller_products(user_id):
-    products = Seller.get_products_by_seller_id(seller_id)
+@bp.route('/sellers/<int:acct_id>', methods=['GET'])
+def get_seller_products(acct_id):
+    products = Seller.get_products_by_seller_id(acct_id)
     return render_template('sellers.html', products=products)
