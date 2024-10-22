@@ -13,7 +13,7 @@ def sellers_inventory():
     return render_template('sellers.html')
 
 class Seller:
-     def __init__(self, id, name, price, available):
+    def __init__(self, id, name, price, available):
         self.id = id
         self.name = name
         self.price = price
@@ -28,7 +28,7 @@ class Seller:
         ''',
                               id=id)
         return Product(*(rows[0])) if rows is not None else None
-
+        
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
@@ -38,6 +38,8 @@ class Seller:
         ''',
                               available=available)
         return [Product(*row) for row in rows]
+    
+    
     '''
     def __init__(self, acct_id, product_id, product_name):
         self.acct_id = acct_id
