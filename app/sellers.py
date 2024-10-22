@@ -12,18 +12,28 @@ def sellers_inventory():
     return render_template('sellers.html')
 
 class Seller:
-    def __init__(self, acct_id, product_id, product_name):
+    def __init__(self, acct_id, product_id, name):
         self.acct_id = acct_id
         self.product_id = product_id
-        # self.product_name = product_name
+        self.name = name
+
+    @staticmethod
+    def get(acct_id):
+        rows = app.db.execute('''
+        SELECT acct_id, product_id
+        FROM Sellers
+        WHERE acct_id = :acct_id
+        ''',
+                              acct_id=acct_id)
+        return Product(*(rows[0])) if rows is not None else None
     
     @staticmethod
-    def get_products_by_seller(acct_id):
-        rows = app.db.execute(
+    def get_all(acct_id):
+        rows = app.db.execute('''
         SELECT Sellers.acct_id, Sellers.product_id, Products.name
         FROM Sellers
         JOIN Products ON Sellers.product_id = Products.id
         WHERE Sellers.acct_id = :acct_id
-        , acct_id=acct_id)
+        ''', acct_id=acct_id)
 
         return [Product(*row) for row in rows]
