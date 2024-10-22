@@ -1,4 +1,5 @@
 from flask import current_app as app
+bp = Blueprint('sellers', __name__)
 
 
 class Product:
