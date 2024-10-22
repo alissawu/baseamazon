@@ -64,7 +64,7 @@ CREATE TABLE Seller (
     product_ID INT NOT NULL,
     PRIMARY KEY (acct_ID, product_ID),
     FOREIGN KEY (acct_ID) REFERENCES Users(acct_ID),
-    FOREIGN KEY (product_ID) REFERENCES Products(product_ID)
+    FOREIGN KEY (product_ID) REFERENCES Products(id)
 );
 
 -- Table for Inventory
