@@ -16,8 +16,8 @@ class Seller:
         self.acct_id = acct_id
         self.product_id = product_id
         # self.product_name = product_name
-
-   @staticmethod
+        
+    @staticmethod
     def get(acct_id):
         rows = app.db.execute('''
         SELECT Sellers.acct_id, Sellers.product_id, Products.name
