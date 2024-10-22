@@ -1,13 +1,12 @@
 from flask import current_app as app
 
+
 class Product:
-    def __init__(self, id, name, price, available, acct_id, product_id):
+    def __init__(self, id, name, price, available):
         self.id = id
         self.name = name
         self.price = price
         self.available = available
-        self.acct_id = acct_id
-        self.product_id = product_id
 
     @staticmethod
     def get(id):
@@ -22,9 +21,8 @@ WHERE id = :id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT Products.id, Products.name, Products.price, Products.available, "Seller".acct_id, "Seller".product_id
+SELECT id, name, price, available
 FROM Products
-JOIN "Seller" ON "Seller".product_id = Products.id
 WHERE available = :available
 ''',
                               available=available)
