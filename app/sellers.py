@@ -36,13 +36,3 @@ class Seller:
         WHERE Sellers.acct_id = :acct_id
         ''', acct_id=acct_id)
         return [Purchase(*row) for row in rows]
-
-            @staticmethod
-    def get(id):
-        rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
-FROM Purchases
-WHERE id = :id
-''',
-                              id=id)
-        return Purchase(*(rows[0])) if rows else None
