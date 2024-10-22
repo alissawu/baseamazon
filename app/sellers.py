@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
+from flask import current_app as app
 from flask_login import current_user
 from humanize import naturaltime
 from app.models.purchase import Purchase  # Changed from PurchaseItem to Purchase
