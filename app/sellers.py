@@ -20,7 +20,7 @@ class Seller:
     @staticmethod
     def get_products_by_seller(acct_id):
         rows = app.db.execute(
-        SELECT Products.id, Products.name, Products.price
+        SELECT Sellers.acct_id, Sellers.product_id, Products.name
         FROM Sellers
         JOIN Products ON Sellers.product_id = Products.id
         WHERE Sellers.acct_id = :acct_id
