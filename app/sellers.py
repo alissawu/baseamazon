@@ -7,5 +7,6 @@ from flask import Blueprint
 
 bp = Blueprint('sellers', __name__)
 
+@bp.route('/sellers')
 def sellers_inventory():
     return redirect(url_for('sellers.sellers_page'))
