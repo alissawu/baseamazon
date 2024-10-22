@@ -31,8 +31,7 @@ class Seller:
         return jsonify(products)
 
 # implement search
-@bp.route('/sellers/<int:acct_id>', methods=['GET'])
+@bp.route('/sellers', methods=['GET'])
 def get_seller_products(acct_id):
     products = Seller.get_products_by_seller_id(acct_id)
-    return products
-    # return render_template('sellers.html', products=products)
+    return render_template('sellers.html', products=products)
