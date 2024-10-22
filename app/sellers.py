@@ -7,9 +7,6 @@ from flask import current_app as app
 bp = Blueprint('sellers', __name__)
 
 @bp.route('/sellers/<int:user_id>', methods=['GET'])
-def sellers_inventory():    
-    return render_template('sellers.html', product=product)
-
 class Seller:
     def __init__(self, acct_id, product_id):
         self.acct_id = acct_id
