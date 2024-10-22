@@ -66,9 +66,6 @@
     <button type="button" onclick="submitSearchForm()">Search</button>
     <button type="button" onclick="clearSearchForm()">Clear</button>
 </div>
-<form action="{{ url_for('purchase.purchase_add', product_id=product.id) }}" method="POST">
-  <input type="submit" value="Purchase" class="btn btn-primary"/>
-</form>
 <a href="{{ url_for('sellers.sellers_inventory') }}">
   <button>Sellers' Inventory</button>
 </a>
@@ -77,13 +74,11 @@
     <tr>
       <th scope="col">Account ID</th>
       <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
     </tr>
   </thead>
   <tbody>
     {% for product in avail_products %}
       <tr>
-        <th scope="row">{{ product.id }}</th>
         <th scope="row">{{ product.id }}</th>
         <td>{{ product.name }}</td>
       </tr>
