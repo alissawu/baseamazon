@@ -1,41 +1,34 @@
-from flask import Blueprint, render_template, redirect, url_for
-from flask import current_app as app
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user
-from humanize import naturaltime
-from app.models.purchase import Purchase  # Changed from PurchaseItem to Purchase
-from datetime import datetime
+from app.models.product import Product
+from app.models.seller import Seller
 
 bp = Blueprint('sellers', __name__)
 
-@bp.route('/sellers/<int:acct_id>')
-def sellers_inventory(acct_id):
-    products = Seller.get_products_by_seller(acct_id)
-    sellers = Seller.get(acct_id)
-    return render_template('sellers.html', sellers=sellers)
+@bp.route('/sellers', methods=['GET', 'POST'])
+def sellers_inventory():
+    products = []
+    
+    if request.method == 'POST':
+        seller_id = request.form.get('seller_id')
+        
+        if seller_id:
+            products = Product.get_products_by_seller_id(seller_id)
+    
+    return render_template('sellers.html', products=products)
 
 class Seller:
-    def __init__(self, acct_id, product_id, name):
+    def __init__(self, acct_id, product_id):
         self.acct_id = acct_id
         self.product_id = product_id
-        self.name = name
 
     @staticmethod
-    def get(acct_id):
+    def get_products_by_seller_id(seller_id):
         rows = app.db.execute('''
-        SELECT acct_id, product_id
-        FROM Sellers
-        WHERE acct_id = :acct_id
-        ''',
-                              acct_id=acct_id)
-        return Product(*(rows[0])) if rows is not None else None
-    
-    @staticmethod
-    def get_all(acct_id):
-        rows = app.db.execute('''
-        SELECT Sellers.acct_id, Sellers.product_id, Products.name
-        FROM Sellers
-        JOIN Products ON Sellers.product_id = Products.id
-        WHERE Sellers.acct_id = :acct_id
-        ''', acct_id=acct_id)
-
-        return [Product(*row) for row in rows]
+        SELECT Products.id, Products.name, Products.price, Products.available
+        FROM Seller
+        JOIN Products ON Seller.product_id = Products.id
+        WHERE Seller.acct_id = :acct_id
+        ''', acct_id=seller_id)
+        
+        return [Product(*row) for row in rows] if rows else []
