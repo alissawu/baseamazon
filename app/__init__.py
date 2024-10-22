@@ -6,6 +6,8 @@ from app.wishlist import bp as wishlist_bp
 
 from app.purchase import bp as purchase_bp
 
+from app.sellers import bp as sellers_bp
+
 app = Flask(__name__)
 
 
@@ -40,6 +42,9 @@ def create_app():
 
     from .purchase import bp as purchase_bp
     app.register_blueprint(purchase_bp)
+
+    from .sellers import bp as sellers_bp
+    app.register_blueprint(sellers_bp)
 
 
     
