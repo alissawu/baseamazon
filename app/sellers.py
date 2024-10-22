@@ -27,6 +27,6 @@ class Seller:
         
         return jsonify(product)
 
-    def submit():
-        id = request.form.get('Account ID')  # 
-        return get_products_by_seller_id(id)
+    @bp.route('/sellers/<int:user_id>', methods=['GET'])
+    def get_seller_products(user_id):
+        return Seller.get_products_by_seller_id(user_id)
