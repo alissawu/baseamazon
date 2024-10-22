@@ -13,18 +13,17 @@
 <table class="table table-hover table-bordered container">
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Seller ID</th>
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
     </tr>
   </thead>
   <tbody>
-    {% for seller in sellers%}
-    <tr>
-      <th scope="row">{{ seller.acct_id }}</th>
-      <td>{{ seller.product_id }}</td>
-      <td>{{ seller.name }}</td>
-    </tr>
+    {% for product in avail_products %}
+      <tr>
+        <th scope="row">{{ product.id }}</th>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price }}</td>
     {% endfor %}
   </tbody>
 </table>
