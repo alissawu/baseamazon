@@ -7,8 +7,9 @@ from datetime import datetime
 
 bp = Blueprint('sellers', __name__)
 
-@bp.route('/sellers')
+ @bp.route('/sellers/<int:acct_id>')
 def sellers_inventory():
+    products = Seller.get_products_by_seller(acct_id)
     return render_template('sellers.html')
 
 class Seller:
@@ -16,23 +17,14 @@ class Seller:
         self.acct_id = acct_id
         self.product_id = product_id
         # self.product_name = product_name
-
+    
     @staticmethod
-    def get(acct_id):
+    def get_products_by_seller(acct_id):
         rows = app.db.execute('''
-        SELECT acct_id, product_id
-        FROM Sellsers
-        WHERE acct_id = :acct_id
-        ''',
-                              acct_id=acct_id)
-        return Purchase(*(rows[0])) if rows else None
-        
-    @staticmethod
-    def get_all_by_acct_id(acct_id):
-        rows = app.db.execute('''
-        SELECT Sellers.acct_id, Sellers.product_id, Products.name
+        SELECT Products.id, Products.name, Products.price
         FROM Sellers
         JOIN Products ON Sellers.product_id = Products.id
         WHERE Sellers.acct_id = :acct_id
         ''', acct_id=acct_id)
-        return [Purchase(*row) for row in rows]
+
+        return [Product(*row) for row in rows]
