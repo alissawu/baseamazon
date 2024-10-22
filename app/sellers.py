@@ -8,8 +8,6 @@ bp = Blueprint('sellers', __name__)
 
 @bp.route('/sellers')
 def sellers_inventory():
-    acct_id = current_user.acct_id
-    sellers = Seller.get(acct_id)
     return render_template('sellers.html')
 
 class Seller:
