@@ -10,7 +10,7 @@ bp = Blueprint('sellers', __name__)
 @bp.route('/sellers')
 def sellers():
     if current_user.is_authenticated:
-        return render_template('sellers.html', items=items, humanize_time=humanize_time)
+        return render_template('sellers.html', humanize_time=humanize_time)
     else:
         return redirect(url_for('users.login'))
 
