@@ -12,7 +12,7 @@
   <tbody>
     {% for feedback in feedback_list %}
       <tr>
-        <td>{{ feedback.type }}</td>
+        <th scope="row">{{ feedback.type }}</td>
         <td>{{ feedback.item_id }}</td>
         <td>{{ feedback.rating_num }}</td>
         <td>{{ feedback.rating_message }}</td>
