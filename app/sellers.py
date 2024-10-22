@@ -15,14 +15,14 @@ class Seller:
     def __init__(self, acct_id, product_id, product_name):
         self.acct_id = acct_id
         self.product_id = product_id
-        self.product_name = product_name
+        # self.product_name = product_name
 
    @staticmethod
     def get(acct_id):
         rows = app.db.execute('''
         SELECT Sellers.acct_id, Sellers.product_id, Products.name
         FROM Sellers
-        JOIN Products ON Sellers.product_id = Products.id
+        # JOIN Products ON Sellers.product_id = Products.id
         WHERE Sellers.acct_id = :acct_id
         ''', acct_id=acct_id)
         return [Seller(*row) for row in rows] if rows else []
