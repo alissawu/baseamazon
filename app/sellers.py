@@ -16,13 +16,33 @@ class Seller:
         self.acct_id = acct_id
         self.product_id = product_id
         # self.product_name = product_name
-        
+
     @staticmethod
     def get(acct_id):
         rows = app.db.execute('''
+        SELECT acct_id, product_id
+        FROM Sellsers
+        WHERE acct_id = :acct_id
+        ''',
+                              acct_id=acct_id)
+        return Purchase(*(rows[0])) if rows else None
+        
+    @staticmethod
+    def get_all_by_acct_id(acct_id):
+        rows = app.db.execute('''
         SELECT Sellers.acct_id, Sellers.product_id, Products.name
         FROM Sellers
-        # JOIN Products ON Sellers.product_id = Products.id
+        JOIN Products ON Sellers.product_id = Products.id
         WHERE Sellers.acct_id = :acct_id
         ''', acct_id=acct_id)
-        return [Seller(*row) for row in rows] if rows else []
+        return [Purchase(*row) for row in rows]
+
+            @staticmethod
+    def get(id):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_purchased
+FROM Purchases
+WHERE id = :id
+''',
+                              id=id)
+        return Purchase(*(rows[0])) if rows else None
