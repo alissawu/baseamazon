@@ -10,7 +10,7 @@ bp = Blueprint('sellers', __name__)
 @bp.route('/sellers/<int:acct_id>')
 def sellers_inventory(acct_id):
     products = Seller.get_products_by_seller(acct_id)
-    sellers = Seller.get(acct_id)  # Ensure you fetch sellers data
+    sellers = Seller.get(acct_id)
     return render_template('sellers.html', sellers=sellers)
 
 class Seller:
