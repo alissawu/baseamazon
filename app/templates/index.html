@@ -59,6 +59,10 @@
     {% endfor %}
   </tbody>
 </table>
+<h2>Sellers' Inventory:</h2>
+<a href="sellers.html">
+  <button>Sellers' Inventory</button>
+</a>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
