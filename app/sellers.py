@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, jsonify
 from flask_login import current_user
+from humanize import naturaltime
 from app.models.product import Product
 from flask import current_app as app
 
 bp = Blueprint('sellers', __name__)
 
-@bp.route('/sellers', methods=['GET', 'POST'])
+@bp.route('/sellers/<int:user_id>', methods=['GET'])
 def sellers_inventory():
     products = []
     
@@ -23,6 +24,7 @@ class Seller:
         self.product_id = product_id
 
     @staticmethod
+    # query for products based on the seller id
     def get_products_by_seller_id(seller_id):
         rows = app.db.execute('''
         SELECT Products.id, Products.name, Products.price, Products.available
@@ -30,5 +32,8 @@ class Seller:
         JOIN Products ON Seller.product_id = Products.id
         WHERE Seller.acct_id = :acct_id
         ''', acct_id=seller_id)
+
+        # Convert rows into a list of dictionaries
+        product = [Product(*row) for row in rows]
         
-        return [Product(*row) for row in rows] if rows else []
+        return jsonify(product)
