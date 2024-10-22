@@ -7,7 +7,7 @@ from datetime import datetime
 
 bp = Blueprint('sellers', __name__)
 
- @bp.route('/sellers/<int:acct_id>')
+@bp.route('/sellers/<int:acct_id>')
 def sellers_inventory():
     products = Seller.get_products_by_seller(acct_id)
     return render_template('sellers.html')
