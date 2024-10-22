@@ -9,3 +9,18 @@ bp = Blueprint('sellers', __name__)
 @bp.route('/sellers')
 def sellers_inventory():
     return render_template('sellers.html')
+
+class Seller:
+    def __init__(self, acct_id, product_id):
+        self.acct_id = acct_id
+        self.product_id = product_id
+
+    @staticmethod
+    def get(acct_id):
+        rows = app.db.execute('''
+SELECT Sellers.acct_id, Sellers.product_id, Products.id, Products.name
+FROM Sellers
+JOIN Products Sellers.product_id = Products.id
+''',
+                              acct_id=acct_id)
+        return [Seller(*row) for row in rows]

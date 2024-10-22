@@ -15,6 +15,7 @@
     <tr>
       <th scope="col">Seller ID</th>
       <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
     </tr>
   </thead>
   <tbody>
@@ -22,8 +23,7 @@
     <tr>
       <th scope="row">{{ seller.seller_id }}</th>
       <td>{{ seller.product_id }}</td>
-      <td>
-      </td>
+      <td>{{ seller.name }}</td>
     </tr>
     {% endfor %}
   </tbody>
