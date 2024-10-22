@@ -19,7 +19,7 @@ class Seller:
     # query for products based on the seller id
     def get_products_by_seller_id(seller_id):
         rows = app.db.execute('''
-        SELECT Products.id, Products.name, Products.price, Products.available
+        SELECT Seller.acct_id, Products.id, Products.name, Products.price, Products.available
         FROM Seller
         JOIN Products ON Seller.product_id = Products.id
         WHERE Seller.acct_id = :acct_id
