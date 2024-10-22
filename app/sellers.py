@@ -1,9 +1,8 @@
-from flask import render_template, redirect, url_for, abort, request, current_app as app
+from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user
-from decimal import Decimal
-from .models.cart import Cart
-from .models.order import Order
-from flask import Blueprint
+from humanize import naturaltime
+from app.models.purchase import Purchase  # Changed from PurchaseItem to Purchase
+from datetime import datetime
 
 bp = Blueprint('sellers', __name__)
 
