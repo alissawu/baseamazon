@@ -71,9 +71,6 @@
     <tr>
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-      <th scope="col">Actions</th> <!-- Add to Wishlist button -->
-      <th scope="col"></th> <!-- Add to Wishlist button -->
     </tr>
   </thead>
   <tbody>
@@ -81,17 +78,6 @@
       <tr>
         <th scope="row">{{ product.id }}</th>
         <td>{{ product.name }}</td>
-        <td>{{ product.price }}</td>
-        <td>
-          <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
-            <input type="submit" value="Add to Wishlist" class="btn btn-primary"/>
-          </form>
-        </td> <!-- Add to Wishlist button in each row -->
-        <td>
-          <form action="{{ url_for('purchase.purchase_add', product_id=product.id) }}" method="POST">
-            <input type="submit" value="Purchase" class="btn btn-primary"/>
-          </form>
-        </td> <!-- Add to Wishlist button in each row -->
       </tr>
     {% endfor %}
   </tbody>
