@@ -45,7 +45,7 @@ class Seller:
         WHERE Seller.acct_ID = :acct_ID
         ''', acct_ID=acct_ID)
 
-        return = [Seller(*row) for row in rows]
+        return [Seller(*row) for row in rows]
  
 
 # implement search
