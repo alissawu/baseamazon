@@ -61,7 +61,7 @@
 </table>
 <h2>Search Sellers' Products:</h2>
 {% for product in seller_products %}
-<form action="{{ url_for('sellers.get_products_by_seller_id', acct_ID=product.acct_ID) }}" method="POST" style="display:inline;">
+<form action="{{ url_for('sellers.get_seller_products', acct_ID=product.acct_ID) }}" method="POST" style="display:inline;">
   <label for="acct_id">Seller ID:</label>
   <input type="text" name="acct_id" placeholder="Enter Seller Account ID">
   <input type="submit" value="Submit">
