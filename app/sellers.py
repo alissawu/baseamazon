@@ -25,20 +25,28 @@ class Seller:
         self.name = name
         self.price = price
         self.available = available
+    
+    def get_all(available=True):
+        rows = app.db.execute('''
+        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
+        FROM Seller
+        JOIN Products ON Products.id = Seller.product_ID
+        WHERE Products.available = :available
+        ''',
+                              available=available)
+        return [Product(*row) for row in rows]
 
     # query for products based on the seller id
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
         SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
         FROM Seller
-        JOIN Products ON Products.id = Seller.poduct_ID
+        JOIN Products ON Products.id = Seller.product_ID
         WHERE Seller.acct_ID = :acct_ID
         ''', acct_ID=acct_ID)
 
-        # Convert rows into a list of dictionaries
-        products = [Seller(*row) for row in rows]
-        
-        return jsonify(products)
+        return = [Seller(*row) for row in rows]
+ 
 
 # implement search
 @bp.route('/sellers/<int:acct_ID>', methods=['GET'])
