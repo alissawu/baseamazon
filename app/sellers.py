@@ -4,6 +4,8 @@ from humanize import naturaltime
 from app.models.product import Product
 from flask import current_app as app
 
+from .models.product import Product
+
 bp = Blueprint('sellers', __name__)
 
 # add authentication
@@ -34,7 +36,7 @@ class Seller:
         ''', acct_ID=acct_ID)
 
         # Convert rows into a list of dictionaries
-        products = [dict(*row) for row in rows]
+        products = [Seller(*row) for row in rows]
         
         return jsonify(products)
 
