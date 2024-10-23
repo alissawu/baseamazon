@@ -34,7 +34,7 @@ class Seller:
         ''', acct_ID=acct_ID)
 
         # Convert rows into a list of dictionaries
-        products = [Product(*row) for row in rows]
+        products = [dict(*row) for row in rows]
         
         return jsonify(products)
 
