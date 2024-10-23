@@ -60,13 +60,11 @@
   </tbody>
 </table>
 <h2>Search Sellers' Products:</h2>
-{% for product in seller_products %}
 <form method="GET" action="/sellers">
   <label for="acct_id">Seller ID:</label>
   <input type="text" name="acct_id" placeholder="Enter Seller Account ID">
   <input type="submit" value="Submit">
 </form>
-{% endfor %}
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
