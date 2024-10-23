@@ -46,7 +46,22 @@ class Seller:
         ''', acct_ID=acct_ID)
 
         return [Seller(*row) for row in rows]
+
+    def get_all_sellers():
+        rows = app.db.execute('''
+        SELECT Sellers.acct_ID, Products.id, Products.name
+        FROM Sellers
+        JOIN Products ON Sellers.product_id = Products.id
+        ''')
+
+        return [Seller(*row) for row in rows]
  
+
+# find all sellers
+@bp.route('/sellers', methods=['GET'])
+def sellers_inventory():
+    sellers = Seller.get_all_sellers()
+    return render_template('sellers.html', sellers=sellers)
 
 # implement search
 @bp.route('/sellers/<int:acct_ID>', methods=['GET'])
