@@ -66,5 +66,6 @@ def sellers_inventory():
 # implement search
 @bp.route('/sellers/<int:acct_ID>', methods=['GET'])
 def get_seller_products(acct_ID):
+    acct_ID = request.args.get('acct_id')
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products)
