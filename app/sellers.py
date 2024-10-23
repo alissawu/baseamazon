@@ -24,7 +24,6 @@ class Seller:
         self.price = price
         self.available = available
 
-    @staticmethod
     # query for products based on the seller id
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
