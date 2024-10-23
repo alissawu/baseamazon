@@ -4,7 +4,7 @@ import datetime
 
 from .models.product import Product
 from .models.purchase import Purchase
-from .app.sellers import Seller
+from .sellers import Seller
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
