@@ -73,7 +73,7 @@ def get_seller_products():
     if acct_ID:
         continue
     else:
-        return Enter Valid Account ID
+        return "Enter Valid Account ID"
     acct_ID = int(acct_ID)
     acct_ID = 201
     products = Seller.get_products_by_seller_id(acct_ID)
