@@ -68,8 +68,13 @@ def sellers_inventory():
 # implement search
 @bp.route('/sellers', methods=['GET', 'POST'])
 def get_seller_products():
-    acct_ID = request.args.get('acct_ID')
+    acct_ID = request.args.get('acct_ID').strip()
+    print(f"Received acct_ID: '{acct_ID}'")  # Debug output
+    if acct_ID:
+        continue
+    else:
+        return Enter Valid Account ID
     acct_ID = int(acct_ID)
-    print(acct_ID)
+    acct_ID = 201
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products)
