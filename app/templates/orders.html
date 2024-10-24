@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Your Orders</h1>
+
+<table class='table table-hover table-bordered'>
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Total Cost</th>
+            <th>Order Date</th>
+            <th>Status</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.order_ID }}</td>
+            <td>${{ order.total_cost }}</td>
+            <td>{{ order.order_date }}</td>
+            <td>{{ order.order_status }}</td>
+            <td>
+                <a href="{{ url_for('carts.order_details', uid=current_user.id, order_id=order.order_ID) }}" class="btn btn-info">
+                    View Details
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
