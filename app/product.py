@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import current_user
-from app.models.product import Product # Assuming Product model is defined in your app
+from app.models.product import Product
 from flask import current_app as app
 
 bp = Blueprint('products', __name__)
