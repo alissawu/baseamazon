@@ -70,6 +70,7 @@ def sellers_inventory():
 def get_seller_products():
     acct_ID = request.args.get('acct_ID').strip()
     print(f"Received acct_ID: '{acct_ID}'")
+    acct_ID = 201
     if acct_ID:
         try:
             acct_ID = int(acct_ID.strip())
@@ -77,6 +78,5 @@ def get_seller_products():
             return "Invalid Account ID"
     else:
         return "Enter Valid Account ID"
-    acct_ID = 201
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products)
