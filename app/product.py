@@ -6,4 +6,5 @@ bp = Blueprint('product', __name__)
 def detail(product_id):
     # Logic to fetch product details goes here
     product = product.get(product_id)
+    print(product)
     return render_template('product_detail.html', product=product)

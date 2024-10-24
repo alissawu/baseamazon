@@ -42,9 +42,9 @@ class Seller:
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
         SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
-        FROM Seller, Products
+        FROM Seller
+        JOIN Products ON Products.id = Seller.product_ID
         WHERE Seller.acct_ID = :acct_ID
-	    AND Products.id = Seller.product_ID
         ''', acct_ID=acct_ID)
 
         return [Seller(*row) for row in rows]
@@ -66,7 +66,7 @@ def sellers_inventory():
     return render_template('sellers.html', sellers=sellers)
 
 # implement search
-@bp.route('/sellers', methods=['GET'])
+@bp.route('/sellers/<int:acct_ID>', methods=['GET'])
 def get_seller_products():
     acct_ID = request.args.get('acct_ID')
     acct_ID = int(acct_ID)
