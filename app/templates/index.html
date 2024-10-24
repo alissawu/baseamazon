@@ -6,67 +6,70 @@
 
 <h2>Products for Sale:</h2>
 <table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-      <th scope="col">Actions</th> <!-- Add to Wishlist button -->
-      <th scope="col"></th> <!-- Add to Wishlist button -->
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in avail_products %}
-      <tr>
-        <th scope="row">{{ product.id }}</th>
-        <td>{{ product.name }}</td>
-        <td>{{ product.price }}</td>
-        <td>
-          <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
-            <input type="submit" value="Add to Wishlist" class="btn btn-primary"/>
-          </form>
-        </td> <!-- Add to Wishlist button in each row -->
-        <td>
-          <form action="{{ url_for('purchase.purchase_add', product_id=product.id) }}" method="POST">
-            <input type="submit" value="Purchase" class="btn btn-primary"/>
-          </form>
-        </td> <!-- Add to Wishlist button in each row -->
-      </tr>
-    {% endfor %}
-  </tbody>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Actions</th> <!-- Add to Wishlist button -->
+      <th scope="col"></th> <!-- Add to Wishlist button -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in avail_products %}
+      <tr>
+        <th scope="row">{{ product.id }}</th>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price }}</td>
+        <td>
+          <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
+            <input type="submit" value="Add to Wishlist" class="btn btn-primary"/>
+          </form>
+        </td>
+        <td>
+          <form action="{{ url_for('purchase.purchase_add', product_id=product.id) }}" method="POST">
+            <input type="submit" value="Purchase" class="btn btn-primary"/>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
 </table>
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Your recent purchases:</h2>
+
+<!-- Add Cart and Orders Section Here -->
+<h2>Your Cart:</h2>
+<p><a href="{{ url_for('carts.cart', uid=current_user.id) }}" class="btn btn-success">View Cart</a></p>
+
+<h2>Your Orders:</h2>
+<p><a href="{{ url_for('carts.orders', uid=current_user.id) }}" class="btn btn-success">View Orders</a></p>
+
+<h2>Your Recent Purchases:</h2>
 <table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Purchase ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-      <th scope="col">Purchase Time</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for purchase in purchase_history %}
-      <tr>
-        <th scope="row">{{ purchase.id }}</th>
-        <td>{{ purchase.product_name }}</td>
-        <td>{{ purchase.product_price }}</td>
-        <td>{{ purchase.time_purchased }}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Purchase ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Purchase Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for purchase in purchase_history %}
+      <tr>
+        <th scope="row">{{ purchase.id }}</th>
+        <td>{{ purchase.product_name }}</td>
+        <td>{{ purchase.product_price }}</td>
+        <td>{{ purchase.time_purchased }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
 </table>
-<h2>Search Sellers' Products:</h2>
-<form method="GET" action="{{ url_for('sellers.get_seller_products') }}">
-  <label for="acct_ID">Seller ID:</label>
-  <input type="text" name="acct_ID" placeholder="Enter Seller Account ID">
-  <input type="submit" value="Submit">
-</form>
+
 {% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart and order history!</p>
 {% endif %}
 
 {% endblock %}
