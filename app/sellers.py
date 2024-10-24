@@ -35,7 +35,7 @@ class Seller:
         WHERE Products.available = :available
         ''',
                               available=available)
-        return [Product(*row) for row in rows]
+        return [Seller(*row) for row in rows]
 
     # query for products based on the seller id
     @staticmethod
@@ -51,12 +51,12 @@ class Seller:
 
     def get_all_sellers():
         rows = app.db.execute('''
-        SELECT Sellers.acct_ID, Products.id, Products.name
-        FROM Sellers
-        JOIN Products ON Sellers.product_id = Products.id
+        SELECT Seller.acct_ID, Products.id, Products.name
+        FROM Seller
+        JOIN Products ON Seller.product_id = Products.id
         ''')
 
-        return [Sellers(*row) for row in rows]
+        return [Seller(*row) for row in rows]
  
 
 # find all sellers
