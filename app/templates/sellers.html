@@ -2,8 +2,8 @@
 
 {% block msg %}
 
-<h2>Sellers' Inventory</h2>
-<table class='table table-hover table-bordered container'>
+<h2>Seller {{ request.args.get('acct_ID') }}'s Inventory</h2>
+<table class='table table-bordered'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Account ID</th>
@@ -15,11 +15,10 @@
   <tbody>
     {% for product in products %}
       <tr>
-        <td>{{ product.acct_ID }}</td>
-        <td>{{ product.id }}</td>
-        <td>{{ product.name }}</td>
-        <td>{{ product.price }}</td>
-
+          <th scope="row">{{ product.acct_ID }}</td>
+          <td>{{ product.id }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
       </tr>
     {% endfor %}
   </tbody>
