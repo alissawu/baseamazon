@@ -91,6 +91,15 @@
 </form>
 
 
+<form method="POST" action="{{ url_for('products.products') }}">
+    <div class="form-group">
+        <label for="k">Search Expensive Products:</label>
+        <input type="number" class="form-control" id="k" name="k" placeholder="Enter a value for k" value="5" min="1">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart and order history!</p>
 {% endif %}
