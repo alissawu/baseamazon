@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, jsonify, request
 from flask_login import current_user
 from humanize import naturaltime
+from app.models.product import Product
 
 class Seller:
     def __init__(self, acct_ID, product_ID, id, name, price, available):
