@@ -42,9 +42,9 @@ class Seller:
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
         SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
-        FROM Seller
-        JOIN Products ON Products.id = Seller.product_ID
+        FROM Seller, Products
         WHERE Seller.acct_ID = :acct_ID
+	    AND Products.id = Seller.product_ID
         ''', acct_ID=acct_ID)
 
         return [Seller(*row) for row in rows]
