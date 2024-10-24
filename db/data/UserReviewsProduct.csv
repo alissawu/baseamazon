@@ -1,6 +1,22 @@
 id,customer_id,product_id,rating_num,rating_message,review_date
-1,1,101,5,Great product!,2024-10-21 18:49:15.617267
-2,2,102,3,Average quality.,2024-10-20 18:49:15.617275
-3,1,103,4,Good value for money.,2024-10-19 18:49:15.617277
-4,3,104,2,Not satisfied.,2024-10-18 18:49:15.617280
-5,2,105,1,Very poor quality.,2024-10-17 18:49:15.617281
+1,0,1,5,Excellent product!,2024-10-15 10:00:00
+2,0,2,4,Good quality.,2024-10-16 11:30:00
+3,0,3,3,Satisfactory performance.,2024-10-17 12:45:00
+4,1,1,5,Loved this item!,2024-10-18 13:00:00
+5,1,4,4,Good value for money.,2024-10-19 14:15:00
+6,1,5,3,Average quality.,2024-10-20 15:20:00
+7,2,1,2,Not what I expected.,2024-10-16 16:30:00
+8,2,2,5,Exceeded expectations.,2024-10-17 17:40:00
+9,2,3,4,Very useful product.,2024-10-18 18:50:00
+10,3,4,3,Decent product.,2024-10-19 19:55:00
+11,3,5,2,Could be better.,2024-10-20 20:00:00
+12,3,6,5,Absolutely loved it!,2024-10-21 21:10:00
+13,4,1,4,Pretty good.,2024-10-22 22:25:00
+14,4,2,3,Not bad, 2024-10-23 23:30:00
+15,4,3,2,A bit disappointing.,2024-10-24 00:35:00
+16,5,4,5,Excellent quality.,2024-10-25 01:45:00
+17,5,5,4,Good but pricey.,2024-10-26 02:50:00
+18,5,6,3,Works as expected.,2024-10-27 03:55:00
+19,6,1,5,Best product ever!,2024-10-28 04:00:00
+20,6,2,4,Quite satisfied.,2024-10-29 05:15:00
+21,6,3,3,Decent for the price.,2024-10-30 06:20:00

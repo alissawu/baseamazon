@@ -3,8 +3,8 @@
 {% block msg %}
 
 <h2>Seller {{ request.args.get('acct_ID') }}'s Inventory</h2>
-<table class='table table-bordered'>
-  <thead class="thead-dark">
+<table class='table table-bordered table-striped table-light'>
+  <thead class="thead-dark"> <!-- Ensures dark header with white text -->
     <tr>
       <th scope="col">Account ID</th>
       <th scope="col">Product ID</th>
@@ -15,8 +15,8 @@
   <tbody>
     {% for product in products %}
       <tr>
-          <td><{{ product.acct_ID }}</td>
-          <td>{{ product.id }}</td>
+          <td>{{ product.acct_ID }}</td>
+          <td>{{ product.product_ID }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
       </tr>

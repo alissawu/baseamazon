@@ -13,31 +13,22 @@ class Feedback:
     # Method to get the 5 most recent feedback (for both products and sellers)
     @staticmethod
     def get_most_recent_feedback(user_id, limit=5):
-        # Get all feedback for products (without limiting)
-        product_reviews = app.db.execute('''
-            SELECT id, customer_id, product_id, rating_num, rating_message, review_date, true as is_product
-            FROM UserReviewsProduct
-            WHERE customer_id = :user_id
+        # Use UNION ALL to combine product and seller reviews
+        reviews = app.db.execute('''
+            (
+                SELECT id, customer_id, product_id AS target_id, rating_num, rating_message, review_date, true AS is_product
+                FROM UserReviewsProduct
+                WHERE customer_id = :user_id
+            )
+            UNION ALL
+            (
+                SELECT id, customer_id, seller_id AS target_id, rating_num, rating_message, review_date, false AS is_product
+                FROM UserReviewsSeller
+                WHERE customer_id = :user_id
+            )
             ORDER BY review_date DESC
-        ''', user_id=user_id)
-        # debug
-        print({len(product_reviews)})
+            LIMIT :limit
+        ''', user_id=user_id, limit=limit)
 
-        # Get all feedback for sellers (without limiting)
-        seller_reviews = app.db.execute('''
-            SELECT id, customer_id, seller_id, rating_num, rating_message, review_date, false as is_product
-            FROM UserReviewsSeller
-            WHERE customer_id = :user_id
-            ORDER BY review_date DESC
-        ''', user_id=user_id)
-        # debug
-        print({len(seller_reviews)})
-
-        # Combine the results
-        reviews = product_reviews + seller_reviews
-
-        # Sort the combined reviews by 'review_date' (6th column, so #5)
-        reviews.sort(key=lambda x: x[5], reverse=True)
-
-        # Return the 5 most recent feedback items
-        return [Feedback(*row) for row in reviews[:limit]]
+        # Return the most recent feedback items
+        return [Feedback(*row) for row in reviews]

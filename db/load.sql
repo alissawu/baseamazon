@@ -1,24 +1,27 @@
-\COPY Users FROM 'Users.csv' WITH DELIMITER ',' NULL '' CSV
--- since id is auto-generated; we need the next command to adjust the counter
--- for auto-generation so next INSERT will not clash with ids loaded above:
-SELECT pg_catalog.setval('public.users_id_seq',
-                         (SELECT MAX(id)+1 FROM Users),
-                         false);
+-- Load Users
+\COPY Users FROM 'Users.csv' WITH DELIMITER ',' NULL '' CSV;
+SELECT pg_catalog.setval('public.users_id_seq', (SELECT MAX(id)+1 FROM Users), false);
 
-\COPY Products FROM 'Products.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.products_id_seq',
-                         (SELECT MAX(id)+1 FROM Products),
-                         false);
+-- Load Products
+\COPY Products FROM 'Products.csv' WITH DELIMITER ',' NULL '' CSV;
+SELECT pg_catalog.setval('public.products_id_seq', (SELECT MAX(id)+1 FROM Products), false);
 
-\COPY Purchases FROM 'Purchases.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(id)+1 FROM Purchases),
-                         false);
+-- Load Purchases
+\COPY Purchases FROM 'Purchases.csv' WITH DELIMITER ',' NULL '' CSV;
+SELECT pg_catalog.setval('public.purchases_id_seq', (SELECT MAX(id)+1 FROM Purchases), false);
 
+-- Load Wishes
 \COPY Wishes FROM 'Wishes.csv' WITH DELIMITER ',' CSV HEADER;
-SELECT pg_catalog.setval('public.wishes_id_seq',
-                         (SELECT MAX(id)+1 FROM Wishes),
-                         false);
+SELECT pg_catalog.setval('public.wishes_id_seq', (SELECT MAX(id)+1 FROM Wishes), false);
 
-\COPY Seller FROM 'Seller.csv' WITH DELIMITER ',' NULL '' CSV;                        
+-- Load Seller
+\COPY Seller FROM 'Seller.csv' WITH DELIMITER ',' NULL '' CSV;
+SELECT pg_catalog.setval('public.sellers_id_seq', (SELECT MAX(acct_ID)+1 FROM Seller), false);
 
+-- Load UserReviewsProduct
+\COPY UserReviewsProduct FROM 'db/data/UserReviewsProduct.csv' WITH DELIMITER ',' NULL '' CSV;
+SELECT pg_catalog.setval('public.userreviewsproduct_id_seq', (SELECT MAX(id)+1 FROM UserReviewsProduct), true);
+
+-- Load UserReviewsSeller
+\COPY UserReviewsSeller FROM 'db/data/UserReviewsSeller.csv' WITH DELIMITER ',' NULL '' CSV;
+SELECT pg_catalog.setval('public.userreviewsseller_id_seq', (SELECT MAX(id)+1 FROM UserReviewsSeller), true);
