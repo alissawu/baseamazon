@@ -7,7 +7,7 @@ from .models.product import Product
 bp = Blueprint('sellers', __name__)
 
 @bp.route('/sellers', methods=['GET'])
-def get_seller_products():
+def sellers():
     acct_ID = request.args.get('acct_ID')
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
