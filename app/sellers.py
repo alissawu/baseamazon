@@ -1,24 +1,82 @@
 from flask import Blueprint, render_template, redirect, url_for, jsonify, request
 from flask_login import current_user
 from humanize import naturaltime
-from .models.sellers import Seller
+from app.models.product import Product
+from flask import current_app as app
+
 from .models.product import Product
 
 bp = Blueprint('sellers', __name__)
 
-@bp.route('/sellers', methods=['GET'])
+# add authentication
+@bp.route('/sellers')
 def sellers():
-    acct_ID = request.args.get('acct_ID')
-    if not current_user.is_authenticated:
+    if current_user.is_authenticated:
+        return render_template('sellers.html')
+    else:
         return redirect(url_for('users.login'))
 
-    if acct_ID:
-        try:
-            acct_ID = int(acct_ID.strip())
-        except ValueError:
-            return "Invalid Account ID"
-        products = Seller.get_products_by_seller_id(acct_ID)
-        return render_template('sellers.html', products=products)
-    else:
+@bp.route('/sellers/<int:acct_ID>', methods=['POST'])
+class Seller:
+    def __init__(self, acct_ID, product_ID, id, name, price, available):
+        self.acct_ID = acct_ID
+        self.product_ID = product_ID
+        self.id = id
+        self.name = name
+        self.price = price
+        self.available = available
+    
+    @staticmethod
+    def get_all(available=True):
+        rows = app.db.execute('''
+        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
+        FROM Seller
+        JOIN Products ON Products.id = Seller.product_ID
+        WHERE Products.available = :available
+        ''',
+                              available=available)
+        return [Seller(*row) for row in rows]
+
+    # query for products based on the seller id
+    @staticmethod
+    def get_products_by_seller_id(acct_ID):
+        rows = app.db.execute('''
+        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
+        FROM Seller
+        JOIN Products ON Products.id = Seller.product_ID
+        WHERE Seller.acct_ID = :acct_ID
+        ''', acct_ID=acct_ID)
+
+        return [Seller(*row) for row in rows]
+
+    def get_all_sellers():
+        rows = app.db.execute('''
+        SELECT Seller.acct_ID, Products.id, Products.name
+        FROM Seller
+        JOIN Products ON Seller.product_id = Products.id
+        ''')
+
+        return [Seller(*row) for row in rows]
+ 
+
+    # find all sellers
+    @bp.route('/sellers', methods=['GET'])
+    def sellers_inventory():
         sellers = Seller.get_all_sellers()
         return render_template('sellers.html', sellers=sellers)
+
+    # implement search
+    @bp.route('/sellers', methods=['GET'])
+    def get_seller_products():
+        acct_ID = request.args.get('acct_ID')
+        print(f"Received acct_ID: '{acct_ID}'")
+        if acct_ID:
+            try:
+                acct_ID = int(acct_ID.strip())
+            except ValueError:
+                return "Invalid Account ID"
+        else:
+            return "Enter Valid Account ID"
+        products = Seller.get_products_by_seller_id(acct_ID)
+        # return products
+        return render_template('sellers.html', products=products)
