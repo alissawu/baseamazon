@@ -14,7 +14,7 @@ bp = Blueprint('index', __name__)
 def index():
     # get all available products for sale:
     products = Product.get_all(True)
-    seller_products = Seller.get_products_by_seller_id(acct_ID)
+    #seller_products = Seller.get_products_by_seller_id(acct_ID)
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
@@ -24,5 +24,4 @@ def index():
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases,
-                           seller_products=seller_products)
+                           purchase_history=purchases)
