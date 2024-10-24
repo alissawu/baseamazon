@@ -20,7 +20,7 @@ SELECT pg_catalog.setval('public.wishes_id_seq',
                          (SELECT MAX(id)+1 FROM Wishes),
                          false);
 
-\COPY Seller FROM 'Seller.csv' WITH DELIMITER ',' CSV HEADER;
+\COPY Seller FROM 'Seller.csv' WITH DELIMITER ',' ',' NULL '' CSV
 SELECT pg_catalog.setval('public.seller_id_seq',
                          (SELECT MAX(id)+1 FROM Seller),
                          false);                         
