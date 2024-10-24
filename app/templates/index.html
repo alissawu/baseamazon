@@ -91,12 +91,11 @@
 </form>
 
 
-<form method="POST" action="{{ url_for('products.products') }}">
-    <div class="form-group">
-        <label for="k">Search Expensive Products:</label>
-        <input type="number" class="form-control" id="k" name="k" placeholder="Enter a value for k" value="5" min="1">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+<h2>Find Top K Expensive Products:</h2>
+<form method="GET" action="/products/top_k">
+  <label for="k">Enter K:</label>
+  <input type="number" name="k" placeholder="Enter a number" required>
+  <input type="submit" value="Submit">
 </form>
 
 

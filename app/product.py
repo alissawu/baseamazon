@@ -30,9 +30,28 @@ def products():
     products = app.db.execute(top_products_query, k=k)
 
     # Render the template and pass the products and k value
-    return render_template('products.html', products=products, k=k)
+    return render_template('product.html', products=products, k=k)
 
+@bp.route('/products/top_k', methods=['GET'])
+def get_top_k_expensive():
+    # Get the value of 'k' from the form query parameters
+    k = request.args.get('k')
 
+    # Handle the case where 'k' is not provided or invalid
+    if not k:
+        return "Please provide a valid value for 'k'.", 400
+
+    try:
+        k = int(k)  # Convert the input to an integer
+    except ValueError:
+        return "Invalid value for 'k'. Please enter a valid integer.", 400
+
+    # Fetch the top k most expensive products using the model
+    top_products = Product.get_top_k_expensive(k)
+
+    # Render the template and pass the top products to display
+    return render_template('product.html', products=top_products)
+                           
 # View detailed product page
 @bp.route('/product_details/<int:pid>', methods=['GET', 'POST'])
 def product_details(pid):

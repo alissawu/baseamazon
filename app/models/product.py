@@ -31,3 +31,16 @@ WHERE available = :available
 ''',
                               available=available)
         return [Product(*row) for row in rows]
+    
+    # Method to get the top k most expensive products
+    @staticmethod
+    def get_top_k_expensive(k):
+        rows = app.db.execute('''
+            SELECT id, name, price, available
+            FROM Products
+            ORDER BY price DESC
+            LIMIT :k
+        ''', k=k)
+
+        # Return a list of Product objects
+        return [Product(*row) for row in rows]
