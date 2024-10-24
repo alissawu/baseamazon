@@ -1,23 +1,53 @@
-<h2>Your Recent Feedback</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Type</th>
-      <th scope="col">Item ID</th>
-      <th scope="col">Rating</th>
-      <th scope="col">Message</th>
-      <th scope="col">Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for feedback in feedback_list %}
-      <tr>
-        <th scope="row">{{ feedback.type }}</td>
-        <td>{{ feedback.item_id }}</td>
-        <td>{{ feedback.rating_num }}</td>
-        <td>{{ feedback.rating_message }}</td>
-        <td>{{ feedback.review_date }}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block content %}
+<div class="sidenav">
+    {% block msg %}
+      <div style="color: rgb(87, 136, 179); text-align: right; margin-bottom: 25px; margin-right: 5px">
+        {% if current_user.is_authenticated %}
+          Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+        {% else %}
+          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+        {% endif %}
+      </div>
+    {% endblock %}
+  </div>
+<h2>Recent Feedback</h2>
+
+<!-- Check if there is any feedback to display -->
+{% if feedback_items %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Target ID</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Message</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through each feedback item using Jinja templating -->
+            {% for feedback in feedback_items %}
+            <tr>
+                <!-- Product or Seller -->
+                <td>{{ 'Product' if feedback.is_product else 'Seller' }}</td>
+                
+                <!-- Display product_id or seller_id based on feedback type -->
+                <td>{{ feedback.target_id }}</td>
+
+                <!-- Display the rating -->
+                <td>{{ feedback.rating_num }}</td>
+
+                <!-- Display the feedback message -->
+                <td>{{ feedback.rating_message }}</td>
+
+                <!-- Display the date -->
+                <td>{{ feedback.review_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No feedback available.</p>
+{% endif %}
+{% endblock %}
