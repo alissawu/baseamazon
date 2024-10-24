@@ -46,7 +46,7 @@ def create_app():
     from .sellers import bp as sellers_bp
     app.register_blueprint(sellers_bp)
 
-    from .carts import bp as cart_bp
+    from .cart import bp as cart_bp
     app.register_blueprint(cart_bp)
 
 
