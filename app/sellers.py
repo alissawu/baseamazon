@@ -59,23 +59,23 @@ class Seller:
         return [Seller(*row) for row in rows]
  
 
-# find all sellers
-@bp.route('/sellers', methods=['GET'])
-def sellers_inventory():
-    sellers = Seller.get_all_sellers()
-    return render_template('sellers.html', sellers=sellers)
+    # find all sellers
+    @bp.route('/sellers', methods=['GET'])
+    def sellers_inventory():
+        sellers = Seller.get_all_sellers()
+        return render_template('sellers.html', sellers=sellers)
 
-# implement search
-@bp.route('/sellers', methods=['GET'])
-def get_seller_products():
-    acct_ID = request.args.get('acct_ID')
-    print(f"Received acct_ID: '{acct_ID}'")
-    if acct_ID:
-        try:
-            acct_ID = int(acct_ID.strip())
-        except ValueError:
-            return "Invalid Account ID"
-    else:
-        return "Enter Valid Account ID"
-    products = Seller.get_products_by_seller_id(acct_ID)
-    return render_template('sellers.html', products=products)
+    # implement search
+    @bp.route('/sellers', methods=['GET'])
+    def get_seller_products():
+        acct_ID = request.args.get('acct_ID')
+        print(f"Received acct_ID: '{acct_ID}'")
+        if acct_ID:
+            try:
+                acct_ID = int(acct_ID.strip())
+            except ValueError:
+                return "Invalid Account ID"
+        else:
+            return "Enter Valid Account ID"
+        products = Seller.get_products_by_seller_id(acct_ID)
+        return render_template('sellers.html', products=products)
