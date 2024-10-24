@@ -70,7 +70,6 @@ def sellers_inventory():
 def get_seller_products():
     acct_ID = request.args.get('acct_ID').strip()
     print(f"Received acct_ID: '{acct_ID}'")
-    acct_ID = "201"
     if acct_ID:
         try:
             acct_ID = int(acct_ID.strip())
