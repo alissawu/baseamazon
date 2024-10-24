@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import current_user
-from app.models.product import Product
+from app.models.product import Product  # Assuming Product model is defined in your app
 from flask import current_app as app
 
 bp = Blueprint('products', __name__)
@@ -9,15 +9,15 @@ bp = Blueprint('products', __name__)
 @bp.route('/products', methods=['GET', 'POST'])
 def products():
     # Default value of k
-    k = request.form.get('k', 5) # Get the value of k from the form, default to 5 if not provided
+    k = request.form.get('k', 5)  # Get the value of k from the form, default to 5 if not provided
 
-# Handle form submission (when k is provided)
+    # Handle form submission (when k is provided)
     if request.method == 'POST':
         try:
             # Convert k to integer
             k = int(k)
         except ValueError:
-            k = 5 # Default to 5 if invalid input
+            k = 5  # Default to 5 if invalid input
 
     # Query to find the top k most expensive products
     top_products_query = '''
@@ -39,8 +39,8 @@ def product_details(pid):
     # Fetch product details
     product_query = '''
         SELECT p.product_ID, p.name, p.price, p.description, p.category, p.image,
-        (SELECT AVG(urp.rating_num) FROM UserReviewsProduct urp WHERE urp.product_ID = p.product_ID) AS avg_rating,
-            (SELECT COUNT(urp.rating_num) FROM UserReviewsProduct urp WHERE urp.product_ID = p.product_ID) AS review_count
+               (SELECT AVG(urp.rating_num) FROM UserReviewsProduct urp WHERE urp.product_ID = p.product_ID) AS avg_rating,
+               (SELECT COUNT(urp.rating_num) FROM UserReviewsProduct urp WHERE urp.product_ID = p.product_ID) AS review_count
         FROM Products p
         WHERE p.product_ID = :pid
     '''
@@ -53,7 +53,7 @@ def product_details(pid):
         JOIN Users u ON u.acct_ID = urp.customer_ID
         WHERE urp.product_ID = :pid
         ORDER BY urp.review_date DESC
-    ''
+    '''
     reviews = app.db.execute(review_query, pid=pid)
 
     return render_template('detailed_product.html', product=product[0], reviews=reviews)
@@ -77,7 +77,7 @@ def add_to_cart(pid):
     # Check available quantity
     available_quantity = get_seller_quantity(seller_id, pid)
     if quantity > available_quantity:
-        lash("Requested quantity exceeds available stock", "danger")
+        flash("Requested quantity exceeds available stock", "danger")
         return redirect(url_for('products.product_details', pid=pid))
 
     # Get the user's cart ID
@@ -114,10 +114,11 @@ def get_cart_id(uid):
         SELECT cart_ID FROM Cart WHERE acct_ID = :uid
     '''
     result = app.db.execute(cart_query, uid=uid)
+    
     if not result:
         insert_cart_query = '''
-            NSERT INTO Cart (acct_ID, total_cost) VALUES (:uid, 0) RETURNING cart_ID
+            INSERT INTO Cart (acct_ID, total_cost) VALUES (:uid, 0) RETURNING cart_ID
         '''
-        esult = app.db.execute(insert_cart_query, uid=uid)
+        result = app.db.execute(insert_cart_query, uid=uid)
 
     return result[0][0]
