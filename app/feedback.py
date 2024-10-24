@@ -1,28 +1,16 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, render_template
 from flask import current_app as app
+from flask_login import current_user
+from .models.feedback import Feedback
 
 bp = Blueprint('feedback', __name__)
 
 @bp.route('/feedback/<int:user_id>', methods=['GET'])
 def get_recent_feedback(user_id):
-    # Run the SQL query
-    rows = app.db.execute('''
-        (
-            SELECT customer_id, product_id as item_id, rating_num, rating_message, review_date, 'product' as type
-            FROM UserReviewsProduct
-            WHERE customer_id = :user_id
-        )
-        UNION ALL
-        (
-            SELECT customer_id, seller_id as item_id, rating_num, rating_message, review_date, 'seller' as type
-            FROM UserReviewsSeller
-            WHERE customer_id = :user_id
-        )
-        ORDER BY review_date DESC
-        LIMIT 5;
-    ''', user_id=user_id)
-
-    # Convert rows into a list of dictionaries
-    feedback = [dict(row) for row in rows]
+    print(f"Requested user ID: {user_id}")  # debug
     
-    return jsonify(feedback)
+    # get all feedback items for the specified user
+    items = Feedback.get_most_recent_feedback(user_id)
+    print(f"Feedback items for user {user_id}: {items}")  # debug
+    
+    return render_template('feedback.html', feedback_items=items)
