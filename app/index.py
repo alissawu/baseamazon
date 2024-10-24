@@ -14,7 +14,7 @@ bp = Blueprint('index', __name__)
 def index():
     # get all available products for sale:
     products = Product.get_all(True)
-    seller_products = Product.get_seller_products()
+    seller_products = Seller.get_seller_products()
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
