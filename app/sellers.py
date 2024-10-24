@@ -78,5 +78,5 @@ class Seller:
         else:
             return "Enter Valid Account ID"
         products = Seller.get_products_by_seller_id(acct_ID)
-        return products
-        # return render_template('sellers.html', products=products)
+        # return products
+        return render_template('sellers.html', products=products)
