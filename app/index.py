@@ -25,4 +25,4 @@ def index():
     return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases,
-                           seller_products=seller_product)
+                           seller_products=seller_products)
