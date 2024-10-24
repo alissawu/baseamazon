@@ -67,7 +67,13 @@
         {% endfor %}
     </tbody>
 </table>
-
+</table>
+<h2>Search Sellers' Products:</h2>
+<form method="GET" action="{{ url_for('sellers.get_seller_products') }}">
+  <label for="acct_ID">Seller ID:</label>
+  <input type="text" name="acct_ID" placeholder="Enter Seller Account ID">
+  <input type="submit" value="Submit">
+</form>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart and order history!</p>
 {% endif %}
