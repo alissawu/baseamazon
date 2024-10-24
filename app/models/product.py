@@ -7,6 +7,10 @@ class Product:
         self.name = name
         self.price = price
         self.available = available
+    
+    @classmethod
+    def get_all_by_uid(cls, uid):
+        return cls.query.filter_by(user_id=uid).all()
 
     @staticmethod
     def get(id):

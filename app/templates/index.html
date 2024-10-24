@@ -74,6 +74,15 @@
   <input type="text" name="acct_ID" placeholder="Enter Seller Account ID">
   <input type="submit" value="Submit">
 </form>
+
+<h2>Search User's Purchases:</h2>
+<form method="GET" action="/purchase/user">
+  <label for="acct_ID">User ID:</label>
+  <input type="text" name="acct_ID" placeholder="Enter User ID">
+  <input type="submit" value="Submit">
+</form>
+
+
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart and order history!</p>
 {% endif %}
