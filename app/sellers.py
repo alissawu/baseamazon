@@ -26,6 +26,7 @@ class Seller:
         self.price = price
         self.available = available
     
+    @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
         SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
@@ -37,6 +38,7 @@ class Seller:
         return [Product(*row) for row in rows]
 
     # query for products based on the seller id
+    @staticmethod
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
         SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
@@ -47,6 +49,7 @@ class Seller:
 
         return [Seller(*row) for row in rows]
 
+    @staticmethod
     def get_all_sellers():
         rows = app.db.execute('''
         SELECT Sellers.acct_ID, Products.id, Products.name
@@ -54,7 +57,7 @@ class Seller:
         JOIN Products ON Sellers.product_id = Products.id
         ''')
 
-        return [Seller(*row) for row in rows]
+        return [Products(*row) for row in rows]
  
 
 # find all sellers
@@ -66,8 +69,8 @@ def sellers_inventory():
 # implement search
 @bp.route('/sellers', methods=['GET'])
 def get_seller_products():
-    print(request.args)
     acct_ID = request.args.get('acct_ID')
     acct_ID = int(acct_ID)
+    print(acct_ID)
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products)
