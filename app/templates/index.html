@@ -60,11 +60,10 @@
   </tbody>
 </table>
 <h2>Search Sellers' Products:</h2>
-<form method="GET" action="{{ url_for('sellers.get_seller_products', acct_ID=acct_ID) }}">
+<form method="POST" action="{{ url_for('sellers.get_seller_products', acct_ID=acct_ID) }}">
   <label for="acct_ID">Seller ID:</label>
   <input type="text" name="acct_ID" placeholder="Enter Seller Account ID">
   <input type="submit" value="Submit">
-  <input type="clear" value="Clear">
 </form>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
