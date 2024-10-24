@@ -49,7 +49,6 @@ class Seller:
 
         return [Seller(*row) for row in rows]
 
-    @staticmethod
     def get_all_sellers():
         rows = app.db.execute('''
         SELECT Sellers.acct_ID, Products.id, Products.name
@@ -57,7 +56,7 @@ class Seller:
         JOIN Products ON Sellers.product_id = Products.id
         ''')
 
-        return [Products(*row) for row in rows]
+        return [Sellers(*row) for row in rows]
  
 
 # find all sellers
