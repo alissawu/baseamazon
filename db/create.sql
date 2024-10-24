@@ -63,7 +63,7 @@ CREATE TABLE Seller (
     acct_ID INT NOT NULL,
     product_ID INT NOT NULL,
     PRIMARY KEY (acct_ID, product_ID),
-    FOREIGN KEY (acct_ID) REFERENCES Users(acct_ID),
+    FOREIGN KEY (acct_ID) REFERENCES Users(id),
     FOREIGN KEY (product_ID) REFERENCES Products(id)
 );
 
