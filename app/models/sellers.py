@@ -24,7 +24,7 @@ class Seller:
     # Get products not in a seller's inventory
     @staticmethod
     def not_inventory(product_ID):
-                rows = app.db.execute('''
+        rows = app.db.execute('''
         SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
         FROM Seller
         JOIN Products ON Products.id = Seller.product_ID
