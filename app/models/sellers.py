@@ -20,3 +20,14 @@ class Seller:
         WHERE Seller.acct_ID = :acct_ID
         ''', acct_ID=acct_ID)
         return [Seller(*row) for row in rows]
+
+    # Get products not in a seller's inventory
+    @staticmethod
+    def not_inventory(product_ID):
+                rows = app.db.execute('''
+        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
+        FROM Seller
+        JOIN Products ON Products.id = Seller.product_ID
+        WHERE Seller.acct_ID != :acct_ID
+        ''', product_ID=product_ID)
+        return [Seller(*row) for row in rows]

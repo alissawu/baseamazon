@@ -27,3 +27,12 @@ def get_seller_products():
         return "No products found for this seller."
     
     return render_template('sellers.html', products=products)
+
+@bp.route('/sellers/not_inventory/<int:product_id>', methods=['POST'])
+def seller_not_inventory(product_id):
+    if current_user.is_authenticated:
+        Seller.not_inventory(product_id)
+        return render_template('sellers_add.html', products=products)
+    else:
+        return redirect(url_for('users.login'))
+
