@@ -2,12 +2,14 @@
 
 {% block msg %}
 
+<h2>Products Not in Seller's Inventory</h2>
 <table class='table table-bordered table-striped table-light'>
-  <thead class="thead-dark"> <!-- Ensures dark header with white text -->
+  <thead class="thead-dark">
     <tr>
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -16,6 +18,11 @@
           <td>{{ product.product_ID }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
+          <td>
+            <form action="{{ url_for('sellers.add_product_to_inventory', product_id=product.product_ID, acct_ID=request.args.get('acct_ID')) }}" method="POST">
+                <input type="submit" value="Add" class="btn btn-success"/>
+            </form>
+          </td>
       </tr>
     {% endfor %}
   </tbody>

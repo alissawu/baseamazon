@@ -23,11 +23,22 @@ class Seller:
 
     # Get products not in a seller's inventory
     @staticmethod
-    def not_inventory(product_ID):
+    def get_products_not_in_inventory(acct_ID):
         rows = app.db.execute('''
-        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
-        FROM Seller
-        JOIN Products ON Products.id = Seller.product_ID
-        WHERE Seller.acct_ID != :acct_ID
-        ''', product_ID=product_ID)
+        SELECT Products.id, Products.name, Products.price, Products.available
+        FROM Products
+        WHERE Products.id NOT IN (
+            SELECT product_ID
+            FROM Seller
+            WHERE acct_ID = :acct_ID
+            )
+            ''', acct_ID=acct_ID)
         return [Seller(*row) for row in rows]
+
+    # Add a product to the seller's inventory
+    @staticmethod
+    def add_product_to_inventory(acct_ID, product_ID):
+        app.db.execute('''
+        INSERT INTO Seller (acct_ID, product_ID)
+        VALUES (:acct_ID, :product_ID)
+        ''', acct_ID=acct_ID, product_ID=product_ID)

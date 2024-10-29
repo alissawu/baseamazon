@@ -7,7 +7,7 @@ bp = Blueprint('sellers', __name__)
 
 
 
-# Route for getting a seller's inventory by their ID
+# get a seller's inventory by their ID
 @bp.route('/sellers/user', methods=['GET'])
 def get_seller_products():
     acct_ID = request.args.get('acct_ID')
@@ -28,11 +28,23 @@ def get_seller_products():
     
     return render_template('sellers.html', products=products)
 
-@bp.route('/sellers/not_inventory/<int:product_id>', methods=['POST'])
-def seller_not_inventory(product_id):
-    if current_user.is_authenticated:
-        Seller.not_inventory(product_id)
+# display products not in seller's inventory
+@bp.route('/sellers/not_inventory', methods=['GET'])
+def seller_not_inventory():
+    acct_ID = request.args.get('acct_ID')
+    if acct_ID and current_user.is_authenticated:
+        products = Seller.get_products_not_in_inventory(acct_ID)
         return render_template('sellers_add.html', products=products)
+    else:
+        return redirect(url_for('users.login'))
+
+# add a product to the seller's inventory
+@bp.route('/sellers/add_product/<int:product_id>/<int:acct_ID>', methods=['POST'])
+def add_product_to_inventory(product_id, acct_ID):
+    if current_user.is_authenticated:
+        Seller.add_product_to_inventory(acct_ID, product_id)
+        flash("Product added to inventory successfully.")
+        return redirect(url_for('sellers.get_seller_products', acct_ID=acct_ID))
     else:
         return redirect(url_for('users.login'))
 
