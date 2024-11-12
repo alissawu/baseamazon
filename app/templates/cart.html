@@ -1,39 +1,54 @@
 {% extends "base.html" %}
 
-{% block content %}
-<h1>Your Cart</h1>
+{% block msg %}
+  <h1 style="color: aliceblue;">Your Cart</h1>
+  <div style="color: aliceblue; text-align: right; margin-bottom: 25px;">
+    {% if current_user.is_authenticated %}
+      Hello {{ current_user.firstname }}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+    {% else %}
+      <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+    {% endif %}
+  </div>
+{% endblock %}
 
-<form action="{{ url_for('carts.update_quantities') }}" method="POST">
-    <table class='table table-hover table-bordered'>
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Action</th>
-            </tr>
+{% block content %}
+  <div class="container mt-5">
+    {% if items %}
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Product ID</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Time Added</th>
+            <th scope="col">Actions</th>
+          </tr>
         </thead>
         <tbody>
-            {% for item in cart_items %}
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>${{ item.price }}</td>
-                <td>
-                    <input type="number" name="quantity_{{ item.cart_item_ID }}" value="{{ item.quantity }}" min="1">
-                </td>
-                <td>
-                    <form action="{{ url_for('carts.remove_item', cart_item_id=item.cart_item_ID) }}" method="POST">
-                        <button type="submit" class="btn btn-danger">Remove</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
+          {% for item in items %}
+          <tr>
+            <td>
+              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.pid }}</a>
+            </td>
+            <td>
+              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.product_name }}</a>
+            </td>
+            <td>
+              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.product_price }}</a>
+            </td>            
+            <td>{{ item.time_added | humanize_time }}</td>
+            <td>
+              <form action="{{ url_for('cart.cart_remove', product_id=item.pid) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
-    <button type="submit" class="btn btn-primary">Update Quantities</button>
-</form>
-
-<form action="{{ url_for('carts.submit_cart') }}" method="POST" style="margin-top: 20px;">
-    <button type="submit" class="btn btn-success">Submit Cart</button>
-</form>
+      </table>
+    {% else %}
+      <p>No items in your cart.</p>
+    {% endif %}
+    <a href="{{ url_for('index.index') }}" class="btn btn-primary mt-3">Continue Shopping</a>
+  </div>
 {% endblock %}
