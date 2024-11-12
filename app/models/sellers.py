@@ -33,7 +33,7 @@ class Seller:
             WHERE acct_ID = :acct_ID
             )
             ''', acct_ID=acct_ID)
-        return [Seller(*row) for row in rows]
+        return [Product(row[0], row[1], row[2], row[3]) for row in rows]
 
     # Add a product to the seller's inventory
     @staticmethod
