@@ -8,7 +8,7 @@ class Seller:
         self.name = name
         self.price = price
         self.available = available
-        self.quantity = quanitity
+        self.quantity = quantity
 
 
     # Get products for a specific seller
