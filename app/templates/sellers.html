@@ -23,7 +23,8 @@
     {% endfor %}
   </tbody>
 </table>
-<form action="{{ url_for('sellers.seller_not_inventory', acct_ID=request.args.get('acct_ID')) }}" method="GET">
+<form action="{{ url_for('sellers.seller_not_inventory') }}" method="GET">
+  <input type="hidden" name="acct_ID" value="{{ request.args.get('acct_ID') }}">
   <input type="submit" value="Add to Inventory" class="btn btn-primary"/>
 </form>
 

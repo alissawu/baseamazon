@@ -32,7 +32,9 @@ def get_seller_products():
 @bp.route('/sellers/not_inventory', methods=['GET'])
 def seller_not_inventory():
     acct_ID = request.args.get('acct_ID')
-    if acct_ID and current_user.is_authenticated:
+    print(f"Received acct_ID in seller_not_inventory: '{acct_ID}'")  # Debugging print
+
+    if acct_ID:
         try:
             acct_ID = int(acct_ID.strip())
         except ValueError:
@@ -40,7 +42,7 @@ def seller_not_inventory():
 
         products = Seller.get_products_not_in_inventory(acct_ID)
         return render_template('sellers_add.html', products=products)
-    return redirect(url_for('sellers.get_seller_products'))
+    return "Enter a valid Account ID"
 
 # add a product to the seller's inventory
 @bp.route('/sellers/add_product/<int:product_id>', methods=['POST'])
