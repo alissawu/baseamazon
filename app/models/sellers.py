@@ -33,7 +33,8 @@ class Seller:
             WHERE acct_ID = :acct_ID
             )
             ''', acct_ID=acct_ID)
-        return [Seller(row[0], str(row[1]), row[2], row[3]) for row in rows]
+        print([Seller(row[0], row[1], row[2], row[3]) for row in rows])
+        return [Seller(row[0], row[1], row[2], row[3]) for row in rows]
 
     # Add a product to the seller's inventory
     @staticmethod
