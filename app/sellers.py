@@ -56,6 +56,7 @@ def add_product_to_inventory(product_id):
             Seller.add_product_to_inventory(acct_ID, product_id)
         except ValueError:
             return "Invalid Account ID"
-    # return redirect(url_for('sellers.seller_not_inventory', acct_ID=acct_ID))
-    return render_template('sellers.html', products=products)
+    # get the updated list of products in the seller's inventory
+    products = Seller.get_products_by_seller_id(acct_ID)
+    return render_template('sellers.html', products=products, acct_ID=acct_ID)
 
