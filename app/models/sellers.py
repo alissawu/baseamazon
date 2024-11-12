@@ -2,9 +2,9 @@ from flask import current_app as app
 
 
 class Seller:
-    def __init__(self, acct_ID, product_ID, name, price, available):
+    def __init__(self, acct_ID=None, product_ID=None, name=None, price=None, available=None):
         self.acct_ID = acct_ID
-        self.product_ID = product_ID  # Maps to Products.id
+        self.product_ID = product_ID
         self.name = name
         self.price = price
         self.available = available
