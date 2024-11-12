@@ -60,3 +60,17 @@ def add_product_to_inventory(product_id):
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products, acct_ID=acct_ID)
 
+# remove a product to the seller's inventory
+@bp.route('/sellers/remove_product/<int:product_id>', methods=['POST'])
+def remove_product_from_inventory(product_id):
+    acct_ID = request.args.get('acct_ID')
+    if acct_ID and current_user.is_authenticated:
+        try:
+            acct_ID = int(acct_ID.strip())
+            Seller.remove_product_from_inventory(acct_ID, product_id)
+        except ValueError:
+            return "Invalid Account ID"
+    # get the updated list of products in the seller's inventory
+    products = Seller.get_products_by_seller_id(acct_ID)
+    return render_template('sellers.html', products=products, acct_ID=acct_ID)
+

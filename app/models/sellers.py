@@ -48,3 +48,11 @@ class Seller:
         INSERT INTO Seller (acct_ID, product_ID)
         VALUES (:acct_ID, :product_ID)
         ''', acct_ID=acct_ID, product_ID=product_ID)
+
+    # Remove a product from a seller's inventory
+    @staticmethod
+    def remove_product_from_inventory(acct_ID, product_ID):
+        app.db.execute('''
+        DELETE FROM Seller
+        WHERE acct_ID = :acct_ID AND product_ID = :product_ID
+        ''', acct_ID=acct_ID, product_ID=product_ID)

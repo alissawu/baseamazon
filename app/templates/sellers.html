@@ -27,5 +27,9 @@
   <input type="hidden" name="acct_ID" value="{{ request.args.get('acct_ID') }}">
   <input type="submit" value="Add to Inventory" class="btn btn-primary"/>
 </form>
+<br>
+<form action="{{ url_for('sellers.remove_product_from_inventory', product_id=product.product_ID, acct_ID=request.args.get('acct_ID')) }}" method="POST">
+  <input type="submit" value="Remove from Inventory" class="btn btn-danger" />
+</form>
 
 {% endblock %}
