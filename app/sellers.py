@@ -11,7 +11,7 @@ bp = Blueprint('sellers', __name__)
 @bp.route('/sellers/user', methods=['GET'])
 def get_seller_products():
     acct_ID = request.args.get('acct_ID')
-    print(f"Received acct_ID: '{acct_ID}'")  # Debugging print
+    print(f"Received acct_ID: '{acct_ID}'")
 
     if acct_ID:
         try:

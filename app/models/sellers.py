@@ -33,7 +33,7 @@ class Seller:
             WHERE acct_ID = :acct_ID
             )
             ''', acct_ID=acct_ID)
-        print([Seller(row[0], row[1], row[2], row[3]) for row in rows])
+        print(f"Not in Inventory: '{row[0], row[1]}'")
         return [Seller(row[0], row[1], row[2], row[3]) for row in rows]
 
     # Add a product to the seller's inventory
