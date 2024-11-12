@@ -15,7 +15,7 @@ class Seller:
     @staticmethod
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
-        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available, Seller.quanitity
+        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
         FROM Seller
         JOIN Products ON Products.id = Seller.product_ID
         WHERE Seller.acct_ID = :acct_ID
@@ -26,7 +26,7 @@ class Seller:
     @staticmethod
     def get_products_not_in_inventory(acct_ID):
         rows = app.db.execute('''
-        SELECT Products.id, Products.name, Products.price, Products.available, Seller.quantity
+        SELECT Products.id, Products.name, Products.price, Products.available
         FROM Products
         WHERE Products.id NOT IN (
             SELECT product_ID
@@ -39,8 +39,7 @@ class Seller:
             product_ID=int(row[0]),  # Ensure Product ID is an integer
             name=str(row[1]),        # Ensure Product Name is a string
             price=float(row[2]),     # Ensure Product Price is a float
-            available=bool(row[3]),  # Ensure Product Availability is a boolean
-                quantity=str([row[4]])
+            available=bool(row[3])
             ) for row in rows]
 
     # Add a product to the seller's inventory
