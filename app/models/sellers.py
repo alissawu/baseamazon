@@ -34,7 +34,12 @@ class Seller:
             )
             ''', acct_ID=acct_ID)
         print("Query Result Rows:", rows)  # Debugging: Print rows to verify column order
-        return [Seller(row[0], row[1], row[2], row[3]) for row in rows]
+        return [Seller(
+            product_ID=int(row[0]),  # Ensure Product ID is an integer
+            name=str(row[1]),        # Ensure Product Name is a string
+            price=float(row[2]),     # Ensure Product Price is a float
+            available=bool(row[3])   # Ensure Product Availability is a boolean
+            ) for row in rows]
 
     # Add a product to the seller's inventory
     @staticmethod

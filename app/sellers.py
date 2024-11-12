@@ -42,7 +42,6 @@ def seller_not_inventory():
 
         products = Seller.get_products_not_in_inventory(acct_ID)
         for product in products:
-            print(product)
             print(f"Add Product - Product ID: {product.product_ID}, Product Name: {product.name}")
         return render_template('sellers_add.html', products=products)
     return "Enter a valid Account ID"
