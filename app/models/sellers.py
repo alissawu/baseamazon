@@ -53,6 +53,6 @@ class Seller:
     @staticmethod
     def remove_product_from_inventory(acct_ID, product_ID):
         app.db.execute('''
-        DELETE FROM Seller
+        DELETE FROM Seller (acct_ID, product_ID)
         WHERE acct_ID = :acct_ID AND product_ID = :product_ID
         ''', acct_ID=acct_ID, product_ID=product_ID)
