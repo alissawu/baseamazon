@@ -25,7 +25,7 @@ class Seller:
     @staticmethod
     def get_products_not_in_inventory(acct_ID):
         rows = app.db.execute('''
-        SELECT Products.id, Products.name, Products.price
+        SELECT Products.id, Products.name, Products.price, Products.available
         FROM Products
         WHERE Products.id NOT IN (
             SELECT product_ID
