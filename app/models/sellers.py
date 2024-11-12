@@ -3,7 +3,7 @@ from flask import current_app as app
 
 class Seller:
     def __init__(self, acct_ID=None, product_ID=None, name=None, price=None, available=None):
-        # self.acct_ID = acct_ID
+        self.acct_ID = acct_ID
         self.product_ID = product_ID
         self.name = name
         self.price = price
@@ -34,7 +34,6 @@ class Seller:
             )
             ''', acct_ID=acct_ID)
         print("rows")
-        print([Seller(row[0]) for row in rows])
         return [Seller(row[0], row[1], row[2], row[3]) for row in rows]
 
     # Add a product to the seller's inventory
