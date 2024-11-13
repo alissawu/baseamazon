@@ -2,39 +2,57 @@ from flask import Flask
 from flask_login import LoginManager
 from .config import Config
 from .db import DB
-
-# Import all blueprints
-from app.index import bp as index_bp
-from app.users import bp as user_bp
 from app.wishlist import bp as wishlist_bp
-from app.feedback import bp as feedback_bp
-from app.product import bp as product_bp
+
 from app.purchase import bp as purchase_bp
+
 from app.sellers import bp as sellers_bp
-from app.cart import bp as cart_bp  # Import cart blueprint
+
+from app.cart import bp as cart_bp
 
 app = Flask(__name__)
 
-# Set up login manager
+
+
+
 login = LoginManager()
 login.login_view = 'users.login'
+
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Initialize database and login manager
+
     app.db = DB(app)
     login.init_app(app)
 
-    # Register blueprints
+    from .index import bp as index_bp
     app.register_blueprint(index_bp)
+
+    from .users import bp as user_bp
     app.register_blueprint(user_bp)
+
+    from .wishlist import bp as wishlist_bp
     app.register_blueprint(wishlist_bp)
+
+    from .feedback import bp as feedback_bp
     app.register_blueprint(feedback_bp)
+
+    from .product import bp as product_bp
     app.register_blueprint(product_bp)
+
+    from .purchase import bp as purchase_bp
     app.register_blueprint(purchase_bp)
+
+    from .sellers import bp as sellers_bp
     app.register_blueprint(sellers_bp)
-    app.register_blueprint(cart_bp)  # Register the cart blueprint
+
+    from .cart import bp as cart_bp
+    app.register_blueprint(cart_bp)
+
+
+
+    
 
     return app
