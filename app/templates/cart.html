@@ -28,13 +28,13 @@
           {% for item in items %}
           <tr>
             <td>
-              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.pid }}</a>
+              <a href="{{ url_for('products.product_details', product_id=item.pid) }}">{{ item.pid }}</a>
             </td>
             <td>
-              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.product_name }}</a>
+              <a href="{{ url_for('products.product_details', product_id=item.pid) }}">{{ item.product_name }}</a>
             </td>
             <td>
-              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.product_price }}</a>
+              <a href="{{ url_for('products.product_details', product_id=item.pid) }}">{{ item.product_price }}</a>
             </td>            
             <td>{{ item.time_added | humanize_time }}</td>
             <td>
