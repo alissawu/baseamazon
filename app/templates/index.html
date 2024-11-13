@@ -45,13 +45,6 @@
 <br><br>
 {% if current_user.is_authenticated %}
 
-<!-- Search User's Cart Section -->
-<h2>Search User's Cart:</h2>
-<form method="GET" action="/cart/user">
-  <label for="acct_ID">User ID:</label>
-  <input type="text" name="acct_ID" placeholder="Enter User ID">
-  <input type="submit" value="Search Cart">
-</form>
 
 <h2>Your Cart:</h2>
 <p><a href="{{ url_for('cart.cart', uid=current_user.id) }}" class="btn btn-success">View Cart</a></p>
@@ -83,6 +76,13 @@
   <label for="acct_ID">Seller ID:</label>
   <input type="text" name="acct_ID" placeholder="Enter Seller Account ID">
   <input type="submit" value="Submit">
+</form>
+
+<h2>Search User's Cart:</h2>
+<form method="GET" action="/cart/user">
+  <label for="acct_ID">User ID:</label>
+  <input type="text" name="acct_ID" placeholder="Enter User ID">
+  <input type="submit" value="Search Cart">
 </form>
 
 <h2>Search User's Purchases:</h2>
