@@ -62,6 +62,7 @@ CREATE TABLE Messages (
 CREATE TABLE Seller (
     acct_ID INT NOT NULL,
     product_ID INT NOT NULL,
+    quantity INT DEFAULT 0,
     PRIMARY KEY (acct_ID, product_ID),
     FOREIGN KEY (acct_ID) REFERENCES Users(id),
     FOREIGN KEY (product_ID) REFERENCES Products(id)
