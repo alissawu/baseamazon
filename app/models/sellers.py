@@ -15,11 +15,12 @@ class Seller:
     @staticmethod
     def get_products_by_seller_id(acct_ID):
         rows = app.db.execute('''
-        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available
+        SELECT Seller.acct_ID, Products.id, Products.name, Products.price, Products.available, Seller.quantity
         FROM Seller
         JOIN Products ON Products.id = Seller.product_ID
         WHERE Seller.acct_ID = :acct_ID
         ''', acct_ID=acct_ID)
+        print(rows)
         return [Seller(*row) for row in rows]
 
     # Get products not in a seller's inventory
@@ -57,10 +58,12 @@ class Seller:
         DELETE FROM Seller
         WHERE acct_ID = :acct_ID AND product_ID = :product_ID
         ''', acct_ID=acct_ID, product_ID=product_ID)
-    # 
+
+    # Update the quantity of a product in inventory
     @staticmethod
-    def remove_product_from_inventory(acct_ID, product_ID):
+    def update_quantity_in_inventory(acct_ID, product_ID, new_quantity):
         app.db.execute('''
-        DELETE FROM Seller
+        UPDATE Seller
+        SET quantity = :new_quantity
         WHERE acct_ID = :acct_ID AND product_ID = :product_ID
-        ''', acct_ID=acct_ID, product_ID=product_ID)
+        ''', acct_ID=acct_ID, product_ID=product_ID, new_quantity=new_quantity)

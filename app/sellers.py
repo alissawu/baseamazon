@@ -56,7 +56,6 @@ def add_product_to_inventory(product_id):
             Seller.add_product_to_inventory(acct_ID, product_id)
         except ValueError:
             return "Invalid Account ID"
-    # get the updated list of products in the seller's inventory
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products, acct_ID=acct_ID)
 
@@ -74,3 +73,13 @@ def remove_product_from_inventory(product_id):
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products, acct_ID=acct_ID)
 
+# update the quantity of a product in the seller's inventory
+@bp.route('/seller/update_quantity/<int:product_id>/<int:acct_ID>', methods=['POST'])
+def update_quantity(product_id, acct_ID):
+    current_quantity = int(request.form['quantity'])
+    change = int(request.form['change'])
+    new_quantity = current_quantity + change
+    if new_quantity < 0:
+        new_quantity = 0
+    Seller.update_quantity_in_inventory(acct_ID, product_id, new_quantity)
+    return redirect(url_for('sellers.get_seller_products', acct_ID=acct_ID))

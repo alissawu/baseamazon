@@ -10,7 +10,8 @@
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
-      <th scope="col">Action</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Inventory</th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +22,15 @@
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
           <td>
+            <form action="{{ url_for('sellers.update_quantity', product_id=product.product_ID, acct_ID=request.args.get('acct_ID')) }}" method="POST">
+                <div style="display: flex; align-items: center;">
+                  <button type="submit" name="change" value="-1" class="btn btn-primary btn-sm">-</button>
+                  <input type="number" name="quantity" value="{{ product.quantity }}" class="form-control form-control-sm" style="width: 60px; text-align: center; border: none; outline: none;" min="0" readonly>
+                  <button type="submit" name="change" value="1" class="btn btn-primary btn-sm">+</button>
+                </div>
+            </form>
+        </td>
+          <td>
           <form action="{{ url_for('sellers.remove_product_from_inventory', product_id=product.product_ID, acct_ID=request.args.get('acct_ID')) }}" method="POST">
             <input type="submit" value="Remove from Inventory" class="btn btn-primary" />
           </form>
@@ -29,9 +39,14 @@
     {% endfor %}
   </tbody>
 </table>
-<form action="{{ url_for('sellers.seller_not_inventory') }}" method="GET">
-  <input type="hidden" name="acct_ID" value="{{ request.args.get('acct_ID') }}">
-  <input type="submit" value="Add to Inventory" class="btn btn-primary"/>
-</form>
+<div style="display: flex; gap: 10px;">
+  <form action="{{ url_for('sellers.seller_not_inventory') }}" method="GET">
+    <input type="hidden" name="acct_ID" value="{{ request.args.get('acct_ID') }}">
+    <input type="submit" value="Add to Inventory" class="btn btn-primary"/>
+  </form>
+  <form action="{{ url_for('index.index') }}" method="GET">
+    <input type="submit" value="Back" class="btn btn-primary"/>
+  </form>
+</div>
 
 {% endblock %}
