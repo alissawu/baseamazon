@@ -115,7 +115,6 @@ def add_products():
             products = Seller.get_products_by_seller_id(acct_ID)
             return render_template('sellers.html', products=products, acct_ID=acct_ID)
         else:
-            flash("Failed to add product.")
             return redirect(url_for('sellers.add_products', acct_ID=acct_ID))
 
     # if GET request, fetch and display the list of products

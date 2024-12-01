@@ -78,7 +78,6 @@ class Seller:
 
         # raise an error if so, proceed if not
         if existing_product:
-            flash("Product found with the given ID or name.")
             return False
 
         # insert into product table
