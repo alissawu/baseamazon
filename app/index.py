@@ -14,7 +14,7 @@ def index():
     # Get all available products for sale
     products = Product.get_all(True)
 
-    # Get the seller account ID from query parameters if provided
+    # Get the seller account ID from the query parameters
     acct_ID = request.args.get('acct_ID')
     
     # Initialize seller_products to None in case no account ID is provided
@@ -25,7 +25,7 @@ def index():
             acct_ID = int(acct_ID.strip())  # Ensure acct_ID is an integer
             seller_products = Seller.get_products_by_seller_id(acct_ID)
         except ValueError:
-            # Handle invalid acct_ID gracefully
+            # If the provided acct_ID is invalid, handle it accordingly
             return "Invalid Account ID. Please enter a valid integer."
 
     # Retrieve purchase history for authenticated users
