@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user
 from flask import current_app as app
 from .models.sellers import Seller
+from flask import session
+from decimal import Decimal, InvalidOperation
 
 bp = Blueprint('sellers', __name__)
 
@@ -81,3 +83,41 @@ def update_quantity(product_id, acct_ID):
         new_quantity = 0
     Seller.update_quantity_in_inventory(acct_ID, product_id, new_quantity)
     return redirect(url_for('sellers.get_seller_products', acct_ID=acct_ID))
+
+@bp.route('/sellers/product', methods=['GET', 'POST'])
+def add_products():
+    
+    acct_ID = request.args.get('acct_ID') or request.form.get('acct_ID')
+    
+    if request.method == 'POST':
+        # get form values
+        product_ID = request.form.get('product_ID') or request.args.get('product_ID')
+        name = request.form.get('name') or request.args.get('name')
+        price = request.form.get('price') or request.args.get('price')
+        available = request.form.get('available') or request.args.get('available')
+        quantity = request.form.get('quantity') or request.args.get('quantity')
+        
+        # check if price is a decimal
+        try:
+            price = Decimal(price)
+        except InvalidOperation:
+            return redirect(url_for('sellers.add_products', acct_ID=acct_ID))
+
+        # check if 'available' is either 'True' or 'False'
+        if available not in ['True', 'False']:
+            return redirect(url_for('sellers.add_products', acct_ID=acct_ID))
+        
+        # add product to the database
+        success = Seller.add_product_to_database(acct_ID, product_ID, name, price, available, quantity)
+
+        if success:
+            # get the updated list of products for the seller
+            products = Seller.get_products_by_seller_id(acct_ID)
+            return render_template('sellers.html', products=products, acct_ID=acct_ID)
+        else:
+            flash("Failed to add product.")
+            return redirect(url_for('sellers.add_products', acct_ID=acct_ID))
+
+    # if GET request, fetch and display the list of products
+    products = Seller.get_products_by_seller_id(acct_ID)
+    return render_template('sellers.html', products=products, acct_ID=acct_ID)
