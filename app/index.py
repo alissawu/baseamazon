@@ -3,8 +3,8 @@ from flask_login import current_user
 import datetime
 from .models.product import Product
 from .models.purchase import Purchase
-from .models.sellers import Seller  # Ensure Seller model is correctly imported
-from .models.cart import Cart  # Ensure Cart model is imported if used here
+from .models.sellers import Seller
+from .models.cart import Cart
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)

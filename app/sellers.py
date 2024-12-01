@@ -5,8 +5,6 @@ from .models.sellers import Seller
 
 bp = Blueprint('sellers', __name__)
 
-
-
 # get a seller's inventory by their ID
 @bp.route('/sellers/user', methods=['GET'])
 def get_seller_products():
