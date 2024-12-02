@@ -13,6 +13,7 @@
             <th scope="col">Availability</th>
             <th scope="col">Time Added</th>
             <th scope="col">Buyer Email</th>
+            <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -22,6 +23,8 @@
             <td>${{ product.price }}</td>
             <td>{{ product.available }}</td>
             <td>{{ product.time_purchased | humanize_time }}</td>
+            <td>{{ product.email }}</td>
+            <td>{{ "Fulfilled" }}</td>
           </tr>
           {% endfor %}
         </tbody>
