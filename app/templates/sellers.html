@@ -44,6 +44,10 @@
     <input type="hidden" name="acct_ID" value="{{ request.args.get('acct_ID') }}">
     <input type="submit" value="Add to Inventory" class="btn btn-primary"/>
   </form>
+  <form action="{{ url_for('sellers.purchase') }}" method="GET">
+    <input type="hidden" name="acct_ID" value="{{ request.args.get('acct_ID') }}">
+    <input type="submit" value="View Order History" class="btn btn-primary"/>
+  </form>
   <form action="{{ url_for('index.index') }}" method="GET">
     <input type="submit" value="Back" class="btn btn-primary"/>
   </form>

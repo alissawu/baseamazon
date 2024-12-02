@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from flask_login import current_user
+from flask import current_app as app
 from app.models.purchase import Purchase  # Changed from PurchaseItem to Purchase
 from datetime import datetime
 from humanize import naturaltime
@@ -19,6 +20,29 @@ def purchase():
 def purchase_add(product_id):
     if current_user.is_authenticated:
         Purchase.add(current_user.id, product_id)
+        
+        # update product quantity
+        product = app.db.execute('''
+            SELECT Products.*, Seller.quantity
+            FROM Products
+            JOIN Seller ON Seller.product_ID = Products.id
+            WHERE Products.id = :product_id
+        ''', product_id=product_id)
+
+        if not product:
+            flash("Product not found.")
+            return redirect(url_for('purchase.purchase'))
+
+        # decrease quantity by 1 for the purchased product
+        new_quantity = product[0][4] - 1
+        
+        if new_quantity >= 0:
+            app.db.execute('''
+                UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
+            ''', quantity=new_quantity, product_id=product_id)
+        else:
+            return "Insufficient quantity available."
+        
         return redirect(url_for('purchase.purchase'))
     else:
         return redirect(url_for('users.login'))
@@ -31,6 +55,28 @@ def humanize_time(dt):
 def purchase_remove(product_id):
     if current_user.is_authenticated:
         Purchase.remove(current_user.id, product_id)
+
+        # update product quantity
+        product = app.db.execute('''
+            SELECT Products.*, Seller.quantity
+            FROM Products
+            JOIN Seller ON Seller.product_ID = Products.id
+            WHERE Products.id = :product_id
+        ''', product_id=product_id)
+
+        if not product:
+            flash("Product not found.")
+            return redirect(url_for('purchase.purchase'))
+
+        # decrease quantity by 1 for the purchased product
+        new_quantity = product[0][4] + 1
+        if new_quantity >= 0:
+            app.db.execute('''
+                UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
+            ''', quantity=new_quantity, product_id=product_id)
+        else:
+            return "Insufficient quantity available."
+        
         return redirect(url_for('purchase.purchase'))
     else:
         return redirect(url_for('users.login'))

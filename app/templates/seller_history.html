@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2>Order History</h2>
+  <div class="container mt-5">
+    {% if products %}
+      <table class="table table-bordered text-center">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Product Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Availability</th>
+            <th scope="col">Time Added</th>
+            <th scope="col">Buyer Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr>
+            <td>{{ product.name }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.available }}</td>
+            <td>{{ product.time_purchased | humanize_time }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No purchases found.</p>
+    {% endif %}
+    <form action="{{ url_for('index.index') }}" method="GET">
+      <input type="submit" value="Back" class="btn btn-primary"/>
+    </form>
+  </div>
+{% endblock %}

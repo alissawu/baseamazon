@@ -2,10 +2,14 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user
 from flask import current_app as app
 from .models.sellers import Seller
+from app.models.purchase import Purchase
 from flask import session
 from decimal import Decimal, InvalidOperation
+from flask_login import current_user
 
 bp = Blueprint('sellers', __name__)
+
+
 
 # get a seller's inventory by their ID
 @bp.route('/sellers/user', methods=['GET'])
@@ -115,8 +119,38 @@ def add_products():
             products = Seller.get_products_by_seller_id(acct_ID)
             return render_template('sellers.html', products=products, acct_ID=acct_ID)
         else:
+            flash("Failed to add product.")
             return redirect(url_for('sellers.add_products', acct_ID=acct_ID))
 
     # if GET request, fetch and display the list of products
     products = Seller.get_products_by_seller_id(acct_ID)
     return render_template('sellers.html', products=products, acct_ID=acct_ID)
+
+@bp.route('/sellers/purchase', methods=['GET'])
+def purchase():
+    # get account ID
+    acct_ID = request.args.get('acct_ID') or request.form.get('acct_ID')
+
+    # get all purchase items for the current user
+    items = Purchase.get_all_by_uid(current_user.id)
+
+    products = []
+    for product in items:
+        # get product_id from Purchase object
+        product_id = product.pid
+
+        # get a seller's products that were purchased
+        item = app.db.execute('''
+            SELECT Products.*, Seller.quantity, Purchases.time_purchased, Users.email
+            FROM Products 
+            JOIN Purchases on Purchases.pid = Products.id
+            JOIN Users on Users.id = Purchases.uid
+            JOIN Seller ON Seller.product_ID = Products.id
+            WHERE Products.id = :product_id AND Seller.acct_ID = :acct_ID
+            ORDER BY Purchases.time_purchased DESC
+        ''', product_id=product_id, acct_ID=acct_ID)
+
+        if item:
+            products.extend(item)
+
+    return render_template('seller_history.html', products=products)
