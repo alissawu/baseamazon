@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify, flash
 from flask_login import current_user
 from flask import current_app as app
 from app.models.purchase import Purchase  # Changed from PurchaseItem to Purchase
@@ -51,32 +51,36 @@ def purchase_add(product_id):
 def humanize_time(dt):
     return naturaltime(datetime.now() - dt)
 
-@bp.route('/purchase/remove/<int:product_id>', methods=['POST'])
-def purchase_remove(product_id):
+@bp.route('/purchase/remove/<int:purchase_id>', methods=['POST'])
+def purchase_remove(purchase_id):
     if current_user.is_authenticated:
-        Purchase.remove(current_user.id, product_id)
+        # Fetch the purchase instance by ID
+        purchase = Purchase.get_by_id(purchase_id)
+        if not purchase or purchase.uid != current_user.id:
+            flash("Purchase not found or unauthorized action.")
+            return redirect(url_for('purchase.purchase'))
 
-        # update product quantity
+        # Remove the purchase instance
+        Purchase.remove_by_id(purchase_id)
+
+        # Update product quantity
         product = app.db.execute('''
             SELECT Products.*, Seller.quantity
             FROM Products
             JOIN Seller ON Seller.product_ID = Products.id
             WHERE Products.id = :product_id
-        ''', product_id=product_id)
+        ''', product_id=purchase.pid)
 
         if not product:
             flash("Product not found.")
             return redirect(url_for('purchase.purchase'))
 
-        # decrease quantity by 1 for the purchased product
+        # Increase quantity by 1 for the removed purchase
         new_quantity = product[0][4] + 1
-        if new_quantity >= 0:
-            app.db.execute('''
-                UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
-            ''', quantity=new_quantity, product_id=product_id)
-        else:
-            return "Insufficient quantity available."
-        
+        app.db.execute('''
+            UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
+        ''', quantity=new_quantity, product_id=purchase.pid)
+
         return redirect(url_for('purchase.purchase'))
     else:
         return redirect(url_for('users.login'))

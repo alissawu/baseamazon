@@ -67,3 +67,16 @@ WHERE uid = :uid AND pid = :pid
 ''',
                         uid=uid,
                         pid=pid)
+    @classmethod
+    def get_by_id(cls, id):
+        purchase = app.db.execute('''
+            SELECT * FROM Purchases WHERE id = :id
+        ''', id=id)
+
+        return purchase[0] if purchase else None  # Return the first result or None
+
+    @classmethod
+    def remove_by_id(cls, id):
+        app.db.execute('''
+            DELETE FROM Purchases WHERE id = :id
+        ''', id=id)
