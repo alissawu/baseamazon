@@ -59,10 +59,11 @@ class User(UserMixin):
             print(f"Error during withdrawal: {e}")
             return False
 
-    def purchase(self, cost):
+    def deduct(self, cost):
         """
         Deduct money from the user's account for a purchase if balance is sufficient.
         """
+        cost = Decimal(cost)
         if cost <= 0:
             print("Purchase amount must be greater than zero.")
             return False
@@ -80,6 +81,27 @@ class User(UserMixin):
         except Exception as e:
             print(f"Error during purchase: {e}")
             return False
+        
+    def refund(self, cost):
+        """
+        add money from the user's account for a purchase.
+        """
+        cost = Decimal(cost)
+        if cost <= 0:
+            print("Purchase amount must be greater than zero.")
+            return False
+        try:
+            app.db.execute("""
+            UPDATE Users
+            SET account_balance = account_balance + :cost
+            WHERE id = :id
+            """, cost=cost, id=self.id)
+            self.account_balance += cost  # Update the in-memory balance
+            return True
+        except Exception as e:
+            print(f"Error during purchase: {e}")
+            return False
+        
 
     def update_account(self, new_email=None, new_password=None, new_firstname = None, new_lastname = None):
         """

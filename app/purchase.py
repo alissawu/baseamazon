@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify, flash
 from flask_login import current_user
 from flask import current_app as app
-from app.models.purchase import Purchase  # Changed from PurchaseItem to Purchase
+from app.models.purchase import Purchase
 from datetime import datetime
 from humanize import naturaltime
 
@@ -19,8 +19,6 @@ def purchase():
 @bp.route('/purchase/add/<int:product_id>', methods=['POST'])
 def purchase_add(product_id):
     if current_user.is_authenticated:
-        Purchase.add(current_user.id, product_id)
-        
         # update product quantity
         product = app.db.execute('''
             SELECT Products.*, Seller.quantity
@@ -35,13 +33,23 @@ def purchase_add(product_id):
 
         # decrease quantity by 1 for the purchased product
         new_quantity = product[0][4] - 1
+        product_price = product[0][2]
+        bought = current_user.deduct(product_price)
+
+
+        if not bought:
+            flash("Insufficient funds.")
+            return redirect(url_for('purchase.purchase'))
         
         if new_quantity >= 0:
             app.db.execute('''
                 UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
             ''', quantity=new_quantity, product_id=product_id)
         else:
-            return "Insufficient quantity available."
+            flash("Insufficient quantity available.")
+            return redirect(url_for('purchase.purchase'))
+        
+        Purchase.add(current_user.id, product_id)
         
         return redirect(url_for('purchase.purchase'))
     else:
@@ -77,6 +85,8 @@ def purchase_remove(purchase_id):
 
         # Increase quantity by 1 for the removed purchase
         new_quantity = product[0][4] + 1
+        product_price = product[0][2]
+        current_user.refund(product_price)
         app.db.execute('''
             UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
         ''', quantity=new_quantity, product_id=purchase.pid)
