@@ -19,6 +19,7 @@ def purchase():
 @bp.route('/purchase/add/<int:product_id>', methods=['POST'])
 def purchase_add(product_id):
     if current_user.is_authenticated:
+        Purchase.add(current_user.id, product_id)
         # update product quantity
         product = app.db.execute('''
             SELECT Products.*, Seller.quantity
