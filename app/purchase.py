@@ -49,6 +49,11 @@ def purchase_add(product_id):
             flash("Insufficient quantity available.")
             return redirect(url_for('purchase.purchase'))
         
+        if new_quantity = 0:
+            app.db.execute('''
+                UPDATE Products SET available = False WHERE product_ID = :product_id
+            ''', quantity=new_quantity, product_id=product_id)
+        
         Purchase.add(current_user.id, product_id)
         
         return redirect(url_for('purchase.purchase'))
