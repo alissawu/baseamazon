@@ -46,6 +46,9 @@
           {% endfor %}
         </tbody>
       </table>
+      <form action="{{ url_for('cart.checkout') }}" method="POST">
+        <button type="submit" class="btn btn-primary">Checkout</button>
+      </form>
     {% else %}
       <p>No items in your cart.</p>
     {% endif %}

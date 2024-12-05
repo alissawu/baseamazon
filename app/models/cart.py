@@ -67,3 +67,11 @@ WHERE uid = :uid AND pid = :pid
 ''',
                         uid=uid,
                         pid=pid)
+                        
+    @staticmethod
+    def clear(uid):
+        app.db.execute('''
+DELETE FROM Cart
+WHERE uid = :uid
+''',
+                        uid=uid)
