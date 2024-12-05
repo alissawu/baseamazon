@@ -29,7 +29,6 @@ def purchase_add(product_id):
         ''', product_id=product_id)
 
         if not product:
-            flash("Product not found.")
             return redirect(url_for('purchase.purchase'))
 
         # decrease quantity by 1 for the purchased product
