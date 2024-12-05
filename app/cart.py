@@ -40,13 +40,26 @@ def checkout():
         if not cart_items:
             flash("Your cart is empty.")
             return redirect(url_for('cart.cart'))
-        
+
+        # Calculate total cost of items in the cart
+        total_cost = sum(item.product_price for item in cart_items)
+
+        # Check if the user has enough balance
+        if total_cost > current_user.balance:
+            flash("Insufficient funds. Please remove some items or add more funds.")
+            return redirect(url_for('cart.cart'))
+
+        # Proceed with checkout
         for item in cart_items:
             # Add item to purchases
             Purchase.add(current_user.id, item.pid)
 
+        # Deduct total cost from user's balance
+        current_user.deduct(total_cost)
+
         # Clear user's cart
         Cart.clear(current_user.id)
+
         flash("Checkout successful!")
         return redirect(url_for('purchase.purchase'))
     else:
