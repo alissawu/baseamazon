@@ -28,9 +28,7 @@ def purchase_add(product_id):
             WHERE Products.id = :product_id
         ''', product_id=product_id)
 
-        if not product:
-            return redirect(url_for('purchase.purchase'))
-
+        
         # decrease quantity by 1 for the purchased product
         new_quantity = product[0][4] - 1
         product_price = product[0][2]
