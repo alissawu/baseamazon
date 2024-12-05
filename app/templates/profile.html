@@ -2,6 +2,23 @@
 
 {% block content %}
 <h1>Update Profile</h1>
+<div>
+    <h3>Account Balance: {{ current_user.account_balance }}</h3>
+    
+    <!-- Deposit Form -->
+    <form action="{{ url_for('users.deposit') }}" method="POST" style="margin-bottom: 10px;">
+        <label for="deposit">Deposit Amount:</label>
+        <input type="number" name="amount" step="0.01" min="0" placeholder="Enter amount" required>
+        <button type="submit">Deposit</button>
+    </form>
+
+    <!-- Withdraw Form -->
+    <form action="{{ url_for('users.withdraw') }}" method="POST">
+        <label for="withdraw">Withdraw Amount:</label>
+        <input type="number" name="amount" step="0.01" min="0" placeholder="Enter amount" required>
+        <button type="submit">Withdraw</button>
+    </form>
+</div>
 <form action="{{ url_for('users.update_account') }}" method="post">
     {{ form.hidden_tag() }}
 

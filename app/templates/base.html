@@ -8,155 +8,170 @@
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
   <style>
-/* General Body Styling */
-body {
-  font-family: "Lato", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f9;
-  color: #333;
-  display: flex;
-  height: 100vh; /* Full screen height */
-}
+    /* General Body Styling */
+    body {
+      font-family: "Lato", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      display: flex;
+      height: 100vh; /* Full screen height */
+    }
 
-/* Sidenav Styling */
-.sidenav {
-  height: 100%;
-  width: 250px; /* Fixed width for the sidebar */
-  background-color: #232f3e; /* Amazon-like dark theme */
-  overflow-x: hidden;
-  padding: 20px;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+    /* Sidenav Styling */
+    .sidenav {
+      height: 100%;
+      width: 250px; /* Fixed width for the sidebar */
+      background-color: #232f3e; /* Amazon-like dark theme */
+      overflow-x: hidden;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-.sidenav h1 {
-  font-size: 1.8rem;
-  color: #f3f3f3;
-  margin-bottom: 20px;
-}
+    .sidenav h1 {
+      font-size: 1.8rem;
+      color: #f3f3f3;
+      margin-bottom: 20px;
+    }
 
-.sidenav div {
-  font-size: 1rem;
-  color: #f3f3f3;
-}
+    .sidenav div {
+      font-size: 1rem;
+      color: #f3f3f3;
+    }
 
-.sidenav a {
-  color: #f3f3f3;
-  text-decoration: none;
-  font-size: 0.9rem;
-  margin-top: 10px;
-  display: inline-block;
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-color: #0073bb; /* Amazon blue */
-  transition: background-color 0.3s;
-}
+    .sidenav a {
+      color: #f3f3f3;
+      text-decoration: none;
+      margin-top: 10px;
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 4px;
+      background-color: #0073bb; /* Amazon blue */
+      transition: background-color 0.3s;
+    }
 
-.sidenav a:hover {
-  background-color: #005fa3; /* Slightly darker blue on hover */
-}
+    .sidenav a:hover {
+      background-color: #005fa3; /* Slightly darker blue on hover */
+    }
 
-/* Main Content Styling */
-.main {
-  flex: 1; /* Take up remaining space */
-  padding: 20px;
-  overflow-y: auto; /* Ensure content is scrollable */
-  background-color: #ffffff;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* Subtle inset shadow */
-}
+    /* Main Content Styling */
+    .main {
+      flex: 1; /* Take up remaining space */
+      padding: 20px;
+      overflow-y: auto; /* Ensure content is scrollable */
+      background-color: #ffffff;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* Subtle inset shadow */
+    }
 
-.main-head {
-  height: 150px;
-  background: #f3f3f3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+    .main-head {
+      height: 150px;
+      background: #f3f3f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-/* Login Section Styling */
-.login-main-text {
-  margin-top: 20%;
-  padding: 60px;
-  color: #555;
-  text-align: center;
-}
+    /* Login Section Styling */
+    .login-main-text {
+      margin-top: 20%;
+      padding: 60px;
+      color: #555;
+      text-align: center;
+    }
 
-.login-main-text h2 {
-  font-weight: 300;
-  font-size: 2rem;
-  color: #232f3e; /* Darker text color */
-}
+    .login-main-text h2 {
+      font-weight: 300;
+      font-size: 2rem;
+      color: #232f3e; /* Darker text color */
+    }
 
-/* Buttons */
-.btn-black {
-  background-color: #232f3e;
-  color: #fff;
-  padding: 10px 15px;
-  font-size: 0.9rem;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s;
-}
+    /* Buttons */
+    .btn-black {
+      background-color: #232f3e;
+      color: #fff;
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
 
-.btn-black:hover {
-  background-color: #1a2736;
-  color: #f1f1f1;
-}
+    .btn-black:hover {
+      background-color: #1a2736;
+      color: #f1f1f1;
+    }
 
-.btn-light {
-  background-color: #f3f3f3;
-  color: #232f3e;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  cursor: pointer;
-  transition: all 0.3s;
-}
+    .btn-light {
+      background-color: #f3f3f3;
+      color: #232f3e;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
 
-.btn-light:hover {
-  background-color: #e1e1e1;
-  color: #111;
-}
+    .btn-light:hover {
+      background-color: #e1e1e1;
+      color: #111;
+    }
 
-/* Responsive Styling */
-@media (max-width: 768px) {
-  .sidenav {
-    width: 200px; /* Adjust sidebar width on smaller screens */
-  }
+    .sidenav h1.large-title {
+      color: aliceblue;
+      font-size: 4vh; /* Enormous size */
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-  .login-main-text {
-    margin-top: 10%;
-    padding: 40px;
-  }
+    .sidenav h1.large-title a {
+        text-decoration: none;
+        color: aliceblue;
+    }
 
-  .btn-black,
-  .btn-light {
-    font-size: 0.8rem;
-    padding: 8px 10px;
-  }
-}
-</style>
+    /* Responsive Styling */
+    @media (max-width: 768px) {
+      .sidenav {
+        width: 200px; /* Adjust sidebar width on smaller screens */
+      }
+
+      .login-main-text {
+        margin-top: 10%;
+        padding: 40px;
+      }
+
+      .btn-black,
+      .btn-light {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <div class="sidenav">
     {% block msg %}
-      <h1 style="color:aliceblue">Mini Amazon!</h1>
-      <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
-        {% if current_user.is_authenticated %}
-        <h2>Hello {{current_user.firstname}}! </h2>
-          <a href="{{ url_for('users.update_account') }}" class="btn btn-info">Update Profile</a>
-          <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
-        {% else %}
-          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
-        {% endif %}
-      </div>
+    <h1 class="large-title">
+      <a href="{{ url_for('index.index') }}">Mini Amazon</a>
+    </h1> 
+  <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
+      {% if current_user.is_authenticated %}
+      <h2>Hello {{ current_user.firstname }}!</h2>
+      <p>Balance: ${{ "{:.2f}".format(current_user.account_balance) }}</p> <!-- Display Balance -->
+      <a href="{{ url_for('users.update_account') }}" class="btn btn-info">Update Profile</a>
+      <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+      {% else %}
+      <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+      {% endif %}
+    </div>
     {% endblock %}
   </div>
   <div class="main">

@@ -27,6 +27,36 @@ class ProfileForm(FlaskForm):
     new_lastname = StringField('New Last Name', validators=[Optional()])
     submit = SubmitField('Update Profile')
 
+@bp.route('/deposit', methods=['POST'])
+@login_required
+def deposit():
+    amount = request.form.get('amount', type=float)
+    if amount and amount > 0:
+        try:
+            success = current_user.deposit(amount)
+            if success:
+                flash(f"Deposited {amount:.2f} successfully.", "success")
+            else:
+                flash("Failed to deposit due to an internal error.", "error")
+        except Exception as e:
+            flash(f"Unexpected error during deposit: {e}", "error")
+    else:
+        flash("Invalid deposit amount.", "error")
+    return redirect(url_for('users.update_account'))
+
+
+@bp.route('/withdraw', methods=['POST'])
+@login_required
+def withdraw():
+    amount = request.form.get('amount', type=float)
+    if amount and amount > 0:
+        if current_user.withdraw(amount):
+            flash(f"Withdrew {amount:.2f} successfully.", "success")
+        else:
+            flash("Insufficient balance or failed to withdraw.", "error")
+    else:
+        flash("Invalid withdrawal amount.", "error")
+    return redirect(url_for('users.update_account'))
 
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required
