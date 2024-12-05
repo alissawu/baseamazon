@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Optional
 
 from .models.user import User
 from app import db  # Ensure db is imported correctly
@@ -21,8 +21,10 @@ class LoginForm(FlaskForm):
 
 class ProfileForm(FlaskForm):
     current_password = PasswordField('Current Password', validators=[DataRequired()])
-    new_email = StringField('New Email', validators=[Email()])
-    new_password = PasswordField('New Password', validators=[DataRequired()])
+    new_email = StringField('New Email', validators=[Optional(), Email()])
+    new_password = PasswordField('New Password', validators=[Optional()])
+    new_firstname = StringField('New First Name', validators=[Optional()])
+    new_lastname = StringField('New Last Name', validators=[Optional()])
     submit = SubmitField('Update Profile')
 
 
@@ -33,6 +35,8 @@ def update_account():
     if form.validate_on_submit():
         new_email = form.new_email.data
         new_password = form.new_password.data
+        new_firstname = form.new_firstname.data
+        new_lastname = form.new_lastname.data
 
         # Validate current password
         user = User.get_by_auth(current_user.email, form.current_password.data)
@@ -46,8 +50,14 @@ def update_account():
         # Update password if provided
         if new_password:
             current_user.password = generate_password_hash(new_password)
+        
+        if new_firstname:
+            current_user.firsname = new_firstname
 
-        success = current_user.update_account(new_email=new_email, new_password=new_password)
+        if new_lastname:
+            current_user.firsname = new_lastname
+
+        success = current_user.update_account(new_email=new_email, new_password=new_password, new_firstname=new_firstname, new_lastname=new_lastname)
 
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':

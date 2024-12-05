@@ -12,7 +12,7 @@ class User(UserMixin):
         self.firstname = firstname
         self.lastname = lastname
 
-    def update_account(self, new_email=None, new_password=None):
+    def update_account(self, new_email=None, new_password=None, new_firstname = None, new_lastname = None):
         """
         Update the user's email and/or password in the database.
         """
@@ -21,6 +21,10 @@ class User(UserMixin):
             updates['email'] = new_email
         if new_password:
             updates['password'] = generate_password_hash(new_password)
+        if new_firstname:
+            updates['firstname'] = new_firstname
+        if new_lastname:
+            updates['lastname'] = new_lastname
 
         if updates:
             try:
@@ -34,6 +38,10 @@ class User(UserMixin):
                 # Update the in-memory object
                 if new_email:
                     self.email = new_email
+                if new_firstname:
+                    self.firstname = new_firstname
+                if new_lastname:
+                    self.lastname = new_lastname
                 return True
             except Exception as e:
                 print(f"Error updating user account: {e}")
