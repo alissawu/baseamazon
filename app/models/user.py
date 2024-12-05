@@ -40,20 +40,31 @@ class User(UserMixin):
         """
         Withdraw money from the user's account if balance is sufficient.
         """
+        amount = Decimal(amount)  # Convert to Decimal
+
         if amount <= 0:
             print("Withdrawal amount must be greater than zero.")
             return False
+        
         if self.account_balance < amount:
             print("Insufficient balance.")
             return False
+        
+        elif self.account_balance == amount:
+            app.db.execute("""
+            UPDATE Users
+            SET account_balance = 0
+            WHERE id = :id
+            """, id=self.id)
+            self.account_balance = 0  # Update the in-memory balance
+            return True
         try:
-            amount_decimal = Decimal(amount)  # Convert to Decimal
             app.db.execute("""
             UPDATE Users
             SET account_balance = account_balance - :amount
             WHERE id = :id
-            """, amount=amount_decimal, id=self.id)
-            self.account_balance -= amount_decimal  # Update the in-memory balance
+            """, amount=amount, id=self.id)
+            self.account_balance -= amount  # Update the in-memory balance
             return True
         except Exception as e:
             print(f"Error during withdrawal: {e}")
