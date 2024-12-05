@@ -45,7 +45,7 @@ def checkout():
         total_cost = sum(item.product_price for item in cart_items)
 
         # Check if the user has enough balance
-        if total_cost > current_user.balance:
+        if total_cost > current_user.account_balance:
             flash("Insufficient funds. Please remove some items or add more funds.")
             return redirect(url_for('cart.cart'))
 

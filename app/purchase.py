@@ -41,18 +41,21 @@ def purchase_add(product_id):
             flash("Insufficient funds.")
             return redirect(url_for('purchase.purchase'))
         
-        if new_quantity >= 0:
+        if new_quantity == 0:
+            app.db.execute('''
+                UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
+            ''', quantity=0, product_id=product_id)
+            app.db.execute('''
+                UPDATE Products SET available = False WHERE Products.id = :product_id
+            ''', quantity=0, product_id=product_id)
+        
+        elif new_quantity > 0:
             app.db.execute('''
                 UPDATE Seller SET quantity = :quantity WHERE product_ID = :product_id
             ''', quantity=new_quantity, product_id=product_id)
         else:
             flash("Insufficient quantity available.")
             return redirect(url_for('purchase.purchase'))
-        
-        if new_quantity == 0:
-            app.db.execute('''
-                UPDATE Products SET available = False WHERE product_ID = :product_id
-            ''', quantity=new_quantity, product_id=product_id)
         
         Purchase.add(current_user.id, product_id)
         
