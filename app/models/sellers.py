@@ -1,6 +1,7 @@
 from flask import current_app as app
 from flask import flash
 
+
 class Seller:
     def __init__(self, acct_ID=None, product_ID=None, name=None, price=None, available=None, quantity=None):
         self.acct_ID = acct_ID
@@ -78,7 +79,7 @@ class Seller:
 
         # raise an error if so, proceed if not
         if existing_product:
-            return False
+            return "Product found with the given ID or name."
 
         # insert into product table
         app.db.execute('''
