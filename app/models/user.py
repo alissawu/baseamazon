@@ -12,6 +12,34 @@ class User(UserMixin):
         self.firstname = firstname
         self.lastname = lastname
 
+    def update_account(self, new_email=None, new_password=None):
+        """
+        Update the user's email and/or password in the database.
+        """
+        updates = {}
+        if new_email:
+            updates['email'] = new_email
+        if new_password:
+            updates['password'] = generate_password_hash(new_password)
+
+        if updates:
+            try:
+                app.db.execute(f"""
+                UPDATE Users
+                SET {', '.join([f"{key} = :{key}" for key in updates.keys()])}
+                WHERE id = :id
+                """,
+                id=self.id,
+                **updates)
+                # Update the in-memory object
+                if new_email:
+                    self.email = new_email
+                return True
+            except Exception as e:
+                print(f"Error updating user account: {e}")
+                return False
+        return False
+
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""

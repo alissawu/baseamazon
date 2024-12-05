@@ -150,7 +150,9 @@ body {
       <h1 style="color:aliceblue">Mini Amazon!</h1>
       <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
-          Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+        <h2>Hello {{current_user.firstname}}! </h2>
+          <a href="{{ url_for('users.update_account') }}" class="btn btn-info">Update Profile</a>
+          <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
         {% else %}
           <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
         {% endif %}
