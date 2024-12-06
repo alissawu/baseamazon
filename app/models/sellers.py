@@ -93,3 +93,69 @@ class Seller:
         INSERT INTO Seller (acct_ID, product_ID, quantity)
         VALUES (:acct_ID, :product_ID, :quantity)
         ''', acct_ID=acct_ID, product_ID=product_ID, quantity=quantity)
+    @staticmethod
+    def get_reviews(seller_id):
+        """Retrieve all reviews for a seller, ordered by review_date."""
+        rows = app.db.execute('''
+            SELECT seller_id, rating_num, rating_message, customer_id, review_date
+            FROM UserReviewsSeller
+            WHERE seller_id = :seller_id
+            ORDER BY review_date DESC
+        ''', seller_id=seller_id)
+
+        return [{
+            'seller_id': row[0],
+            'rating_num': row[1],
+            'rating_message': row[2],
+            'customer_id': row[3],
+            'review_date': row[4]
+        } for row in rows]
+
+    @staticmethod
+    def average_rating(seller_id):
+        """Calculate the average rating for a seller."""
+        rows = app.db.execute('''
+            SELECT AVG(rating_num)
+            FROM UserReviewsSeller
+            WHERE seller_id = :seller_id
+        ''', seller_id=seller_id)
+        return rows[0][0] if rows[0][0] is not None else 0
+
+    @staticmethod
+    def review_count(seller_id):
+        """Count the number of reviews for a seller."""
+        rows = app.db.execute('''
+            SELECT COUNT(*)
+            FROM UserReviewsSeller
+            WHERE seller_id = :seller_id
+        ''', seller_id=seller_id)
+        return rows[0][0] if rows else 0
+
+    @staticmethod
+    def add_review(customer_id, seller_id, rating_num, rating_message):
+        """Add or update a review for a seller."""
+        existing_review = app.db.execute('''
+            SELECT id
+            FROM UserReviewsSeller
+            WHERE customer_id = :customer_id AND seller_id = :seller_id
+        ''', customer_id=customer_id, seller_id=seller_id)
+
+        if existing_review:
+            app.db.execute('''
+                UPDATE UserReviewsSeller
+                SET rating_num = :rating_num, rating_message = :rating_message, review_date = current_timestamp
+                WHERE customer_id = :customer_id AND seller_id = :seller_id
+            ''', customer_id=customer_id, seller_id=seller_id, rating_num=rating_num, rating_message=rating_message)
+        else:
+            app.db.execute('''
+                INSERT INTO UserReviewsSeller (customer_id, seller_id, rating_num, rating_message, review_date)
+                VALUES (:customer_id, :seller_id, :rating_num, :rating_message, current_timestamp)
+            ''', customer_id=customer_id, seller_id=seller_id, rating_num=rating_num, rating_message=rating_message)
+
+    @staticmethod
+    def delete_review(customer_id, seller_id):
+        """Delete a review for a seller."""
+        app.db.execute('''
+            DELETE FROM UserReviewsSeller
+            WHERE customer_id = :customer_id AND seller_id = :seller_id
+        ''', customer_id=customer_id, seller_id=seller_id)

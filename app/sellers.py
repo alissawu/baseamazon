@@ -154,3 +154,39 @@ def purchase():
             products.extend(item)
 
     return render_template('seller_history.html', products=products)
+
+@bp.route('/seller/<int:seller_id>', methods=['GET'])
+def seller_detail(seller_id):
+    """Display seller details, reviews, and summary ratings."""
+    reviews = Seller.get_reviews(seller_id)
+    avg_rating = Seller.average_rating(seller_id)
+    review_count = Seller.review_count(seller_id)
+    return render_template(
+        'seller.html',
+        seller_id=seller_id,
+        reviews=reviews,
+        avg_rating=avg_rating,
+        review_count=review_count
+    )
+
+@bp.route('/seller/<int:seller_id>/review', methods=['POST'])
+def add_review(seller_id):
+    """Add or update a review for a seller."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+
+    rating_num = int(request.form['rating_num'])
+    rating_message = request.form['rating_message']
+    Seller.add_review(current_user.id, seller_id, rating_num, rating_message)
+    flash('Review submitted successfully!', 'success')
+    return redirect(url_for('sellers.seller_detail', seller_id=seller_id))
+
+@bp.route('/seller/<int:seller_id>/review/delete', methods=['POST'])
+def delete_review(seller_id):
+    """Delete a review for a seller."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+
+    Seller.delete_review(current_user.id, seller_id)
+    flash('Review deleted successfully!', 'success')
+    return redirect(url_for('sellers.seller_detail', seller_id=seller_id))

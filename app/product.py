@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import current_user
-from app.models.product import Product  # Assuming Product model is defined in your app
+from app.models.product import Product 
 from flask import current_app as app
 
 bp = Blueprint('product', __name__)
@@ -13,11 +13,12 @@ def detail(product_id):
         return redirect(url_for('index.index'))
 
     reviews = Product.get_reviews(product_id)
+    avg_rating = Product.average_rating(product_id)  # Get average rating
+    review_count = Product.review_count(product_id)  # Get the number of reviews
 
-    # Debugging: Print reviews to ensure product_id exists
     print("DEBUG: Reviews fetched from DB:", reviews)
 
-    return render_template('product.html', product=product, reviews=reviews)
+    return render_template('product.html', product=product, reviews=reviews, avg_rating=avg_rating, review_count=review_count)
 
 
 # Route to handle listing of top k products

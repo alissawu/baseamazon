@@ -25,6 +25,13 @@
             <td>{{ product.time_purchased | humanize_time }}</td>
             <td>{{ product.email }}</td>
             <td>{{ "Fulfilled" }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('sellers.add_review', seller_id=product.seller_id) }}">
+                <input type="hidden" name="rating_num" value="5"> <!-- Default rating -->
+                <textarea name="rating_message" placeholder="Leave a review"></textarea>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>

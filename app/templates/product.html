@@ -45,6 +45,13 @@
     <h2>Product Information</h2>
     <p><strong>Price:</strong> ${{ product.price }}</p>
     <p><strong>Availability:</strong> {{ 'In Stock' if product.available else 'Out of Stock' }}</p>
+
+    <!-- Display Review Summary -->
+    <div class="review-summary mt-3">
+        <h4>Reviews</h4>
+        <p><strong>Average Rating:</strong> {{ avg_rating|round(1) }}/5</p>  <!-- Rounded average rating -->
+        <p><strong>Number of Reviews:</strong> {{ review_count }}</p>
+    </div>
 </div>
 
 <!-- Adding Reviews Section -->
@@ -67,7 +74,7 @@
         <tbody>
             {% for review in reviews %}
             <tr>
-                <td>{{ review.customer_id }}</td> <!-- Replace with review.fullname if available -->
+                <td>{{ review.customer_id }}</td> 
                 <td>{{ review.rating_num }}/5</td>
                 <td>{{ review.rating_message }}</td>
                 <td>{{ review.review_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
