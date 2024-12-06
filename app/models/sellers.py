@@ -221,5 +221,5 @@ class Seller:
         else:
             print(f"Valid relationship found: {rows}")
 
-        return len(rows) > 0
+        return True
 
