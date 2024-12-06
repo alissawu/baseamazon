@@ -90,5 +90,15 @@ WHERE available = :available
         ''', product_id=product_id)
 
         return rows[0][0] if rows else 0
+    @staticmethod
+    def can_review_product(customer_id, product_id):
+        """Check if a user can review a product (i.e., if they have purchased it)."""
+        rows = app.db.execute('''
+            SELECT COUNT(*)
+            FROM Purchases
+            WHERE uid = :customer_id AND pid = :product_id
+        ''', customer_id=customer_id, product_id=product_id)
+        return rows[0][0] > 0
+
 
 

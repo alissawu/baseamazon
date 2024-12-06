@@ -205,12 +205,16 @@ def seller_detail(seller_id):
 
 @bp.route('/seller/<int:seller_id>/review', methods=['POST'])
 def add_review(seller_id):
-    """Add or update a review for a seller."""
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
 
     rating_num = int(request.form['rating_num'])
     rating_message = request.form['rating_message']
+
+    # Check if the user can review the seller
+    if not Seller.can_review_seller(current_user.id, seller_id):
+        flash("You can only review sellers you have purchased from.", "danger")
+        return redirect(url_for('sellers.seller_detail', seller_id=seller_id))
 
     # Check if the user already reviewed this seller
     existing_review = app.db.execute('''
@@ -236,7 +240,6 @@ def add_review(seller_id):
         flash('Review submitted successfully!', 'success')
 
     return redirect(url_for('sellers.seller_detail', seller_id=seller_id))
-
 
 @bp.route('/seller/<int:seller_id>/review/delete', methods=['POST'])
 def delete_review(seller_id):

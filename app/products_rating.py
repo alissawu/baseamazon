@@ -136,13 +136,17 @@ def add_review(pid):
 
 @bp.route('/insert_pr', methods=['POST'])
 def insert_data():
-    # Validate and insert review
     description = request.form.get('description')
     stars = request.form.get('stars')
     pid = request.form.get('pid')  # Product ID
     uid = current_user.id  # Current user ID
 
     try:
+        # Check if the user can review the product
+        if not Product.can_review_product(uid, pid):
+            flash("You can only review products you have purchased.", "danger")
+            return redirect(url_for('product.detail', product_id=pid))
+
         # Check if the user already reviewed this product
         existing_review = app.db.execute('''
             SELECT id 
@@ -157,7 +161,7 @@ def insert_data():
         # Validate inputs
         if not (1 <= int(stars) <= 5):
             flash("Rating must be between 1 and 5.", "danger")
-            return redirect(url_for('product.detail', product_id=pid))  # Redirect to product page
+            return redirect(url_for('product.detail', product_id=pid))
 
         if len(description) > 255:
             flash("Review exceeds the maximum length of 255 characters.", "danger")
@@ -170,10 +174,9 @@ def insert_data():
         '''
         app.db.execute(insert_query, uid=uid, pid=pid, description=description, stars=stars)
 
-        # Redirect to product details page with success message
         flash("Review submitted successfully!", "success")
         return redirect(url_for('product.detail', product_id=pid))
 
     except Exception as e:
         flash(f"Error submitting review: {e}", "danger")
-        return redirect(url_for('product.detail', product_id=pid))  # Redirect on failure
+        return redirect(url_for('product.detail', product_id=pid))
