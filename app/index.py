@@ -5,6 +5,7 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.sellers import Seller
 from .models.cart import Cart
+from .models.category import Category
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
