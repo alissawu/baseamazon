@@ -16,7 +16,7 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     available BOOLEAN DEFAULT TRUE,
-    category_id INT NOT NULL
+    category_id INT NOT NULL,
     FOREIGN KEY (category_id) REFERENCES Category(id)
 );
 
