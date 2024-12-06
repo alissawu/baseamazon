@@ -2,11 +2,12 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, available):
+    def __init__(self, id, name, price, available, category):
         self.id = id
         self.name = name
         self.price = price
         self.available = available
+        self.category = category
     
     @classmethod
     def get_all_by_uid(cls, uid):
