@@ -25,8 +25,7 @@ def get_seller_products():
     else:
         return "Enter a valid Account ID"
 
-    products = Seller.get_products_by_seller_id(0)
-    # products = Seller.get_products_by_seller_id(acct_ID)
+    products = Seller.get_products_by_seller_id(acct_ID)
     
     if not products:
         return "No products found for this seller."
