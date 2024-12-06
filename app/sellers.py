@@ -236,6 +236,7 @@ def add_review(seller_id):
 
     return redirect(url_for('sellers.seller_detail', seller_id=seller_id))
 
+
 @bp.route('/seller/<int:seller_id>/review/delete', methods=['POST'])
 def delete_review(seller_id):
     """Delete a review for a seller."""

@@ -57,14 +57,8 @@ class Feedback:
         return [Feedback(*row) for row in reviews]
 
     @staticmethod
-    def get_all_feedback(user_id, sort_by="review_date", order="desc"):
-        valid_columns = ["review_date", "rating_num"]
-        if sort_by not in valid_columns:
-            sort_by = "review_date"
-
-        sort_order = "DESC" if order.lower() == "desc" else "ASC"
-
-        reviews = app.db.execute(f'''
+    def get_all_feedback(user_id):
+        reviews = app.db.execute('''
             (
                 SELECT id, customer_id, product_id AS target_id, rating_num, rating_message, review_date, true AS is_product
                 FROM UserReviewsProduct
@@ -76,7 +70,7 @@ class Feedback:
                 FROM UserReviewsSeller
                 WHERE customer_id = :user_id
             )
-            ORDER BY {sort_by} {sort_order}
+            ORDER BY review_date DESC
         ''', user_id=user_id)
 
         return [Feedback(*row) for row in reviews]
@@ -99,26 +93,35 @@ class Feedback:
         return Feedback(*row[0]) if row else None
 
     @staticmethod
-    def update_review(review_id, rating_num, rating_message):
-        # Check if the review is for a product or a seller
-        product_review = app.db.execute('''
-            SELECT id FROM UserReviewsProduct WHERE id = :review_id
-        ''', review_id=review_id)
-        
-        if product_review:
+    def update_review(review_id, rating_num, rating_message, is_product):
+        """
+        Update a review in the database. Uses is_product to determine the table to update.
+
+        Args:
+            review_id (int): The ID of the review.
+            rating_num (int): The new rating value.
+            rating_message (str): The new review message.
+            is_product (bool): True if the review is for a product, False if for a seller.
+        """
+        if is_product:
             # Update the product review
             app.db.execute('''
                 UPDATE UserReviewsProduct
-                SET rating_num = :rating_num, rating_message = :rating_message
+                SET rating_num = :rating_num, 
+                    rating_message = :rating_message, 
+                    review_date = current_timestamp
                 WHERE id = :review_id
             ''', review_id=review_id, rating_num=rating_num, rating_message=rating_message)
         else:
             # Update the seller review
             app.db.execute('''
                 UPDATE UserReviewsSeller
-                SET rating_num = :rating_num, rating_message = :rating_message
+                SET rating_num = :rating_num, 
+                    rating_message = :rating_message, 
+                    review_date = current_timestamp
                 WHERE id = :review_id
             ''', review_id=review_id, rating_num=rating_num, rating_message=rating_message)
+
 
 
     @staticmethod

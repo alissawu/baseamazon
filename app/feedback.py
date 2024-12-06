@@ -17,29 +17,27 @@ def get_recent_feedback():
 
 @bp.route('/feedback/user_reviews', methods=['GET'])
 def user_feedback():
-    sort_by = request.args.get("sort_by", "review_date")  # Default: review_date
-    order = request.args.get("order", "desc")  # Default: descending
-
     user_id = current_user.id
-    feedback_items = Feedback.get_all_feedback(user_id, sort_by=sort_by, order=order)
-
-    return render_template('user_feedback.html', feedback_items=feedback_items, sort_by=sort_by, order=order)
+    # Always sort by date descending in the backend
+    feedback_items = Feedback.get_all_feedback(user_id)
+    return render_template('user_feedback.html', feedback_items=feedback_items)
 
 
 @bp.route('/feedback/edit/<int:review_id>', methods=['POST'])
 def edit_review(review_id):
-    # Retrieve the updated data from the form
-    rating_num = request.form.get('rating_num')
-    rating_message = request.form.get('rating_message')
+    """
+    Edit a review. Updates either a product or seller review based on is_product flag.
+    """
+    rating_num = request.form.get('rating_num', type=int)
+    rating_message = request.form.get('rating_message', type=str)
+    is_product = request.form.get('is_product', type=lambda x: x.lower() == 'true')  # Convert 'true'/'false' to bool
 
     try:
-        # Update the review in the database
-        Feedback.update_review(review_id, rating_num, rating_message)
+        Feedback.update_review(review_id, rating_num, rating_message, is_product)
         flash("Review updated successfully!", "success")
     except Exception as e:
         flash(f"Error updating review: {e}", "danger")
     
-    # Redirect back to the user's feedback management page
     return redirect(url_for('feedback.user_feedback'))
 
 
