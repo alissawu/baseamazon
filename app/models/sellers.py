@@ -202,24 +202,16 @@ class Seller:
             WHERE customer_id = :customer_id AND seller_id = :seller_id
         ''', customer_id=customer_id, seller_id=seller_id)
 
-
     @staticmethod
     def can_review_seller(customer_id, seller_id):
-        """
-        Check if a customer can review a seller by verifying they purchased from the seller.
-        """
+        """Check if a user can review a seller (i.e., if they have purchased from them)."""
         rows = app.db.execute('''
-            SELECT Purchases.uid, Seller.acct_ID, Purchases.pid
+            SELECT COUNT(*)
             FROM Purchases
             JOIN Seller ON Purchases.pid = Seller.product_ID
             WHERE Purchases.uid = :customer_id AND Seller.acct_ID = :seller_id
         ''', customer_id=customer_id, seller_id=seller_id)
+        return rows[0][0] > 0  # Returns True if the count is > 0
 
-        # Debug: Log missing relationships
-        if not rows:
-            print(f"No relationship between customer {customer_id} and seller {seller_id}. Check Seller table.")
-        else:
-            print(f"Valid relationship found: {rows}")
 
-        return True
-
+    
