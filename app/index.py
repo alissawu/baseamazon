@@ -13,8 +13,8 @@ bp = Blueprint('index', __name__)
 def index():
     sort_order = request.args.get('sort_order', 'ASC')  # Default is 'ASC'
     available = request.args.get('available', True)
-
     products = Products.get_all(available=available, sort_by_price=True, sort_order=sort_order)
+    
     acct_ID = request.args.get('acct_ID')
     seller_products = None
 
