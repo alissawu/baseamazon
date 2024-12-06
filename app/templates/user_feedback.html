@@ -1,18 +1,7 @@
-<!-- Display user's feedback items, separate from the recent 5 thing -->
-<link rel="stylesheet" href="{{ url_for('static', filename='static/css/styles.css') }}">
+{% extends "base.html" %}
 
 {% block content %}
-<div class="sidenav">
-    {% block msg %}
-    <div style="color: rgb(87, 136, 179); text-align: right; margin-bottom: 25px; margin-right: 5px">
-        {% if current_user.is_authenticated %}
-        Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
-        {% else %}
-        <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
-        {% endif %}
-    </div>
-    {% endblock %}
-</div>
+
 
 <h2>Your Feedback</h2>
 

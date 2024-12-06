@@ -149,18 +149,29 @@ def insert_data():
     uid = current_user.id  # Current user ID
 
     try:
+        # Check if the user already reviewed this product
+        existing_review = app.db.execute('''
+            SELECT id 
+            FROM UserReviewsProduct
+            WHERE customer_id = :uid AND product_id = :pid
+        ''', uid=uid, pid=pid)
+
+        if existing_review:
+            flash("You have already submitted a review for this product.", "warning")
+            return redirect(url_for('product.detail', product_id=pid))
+
         # Validate inputs
         if not (1 <= int(stars) <= 5):
             flash("Rating must be between 1 and 5.", "danger")
             return redirect(url_for('product.detail', product_id=pid))  # Redirect to product page
 
-        if len(description) > MAX_DESCRIPTION_LENGTH:
-            flash(f"Review exceeds the maximum length of {MAX_DESCRIPTION_LENGTH} characters.", "danger")
+        if len(description) > 255:
+            flash("Review exceeds the maximum length of 255 characters.", "danger")
             return redirect(url_for('product.detail', product_id=pid))
 
         # Insert review into the database
         insert_query = '''
-            INSERT INTO UserReviewsProduct (customer_ID, product_ID, rating_message, rating_num, review_date)
+            INSERT INTO UserReviewsProduct (customer_id, product_id, rating_message, rating_num, review_date)
             VALUES (:uid, :pid, :description, :stars, current_timestamp)
         '''
         app.db.execute(insert_query, uid=uid, pid=pid, description=description, stars=stars)
@@ -172,4 +183,3 @@ def insert_data():
     except Exception as e:
         flash(f"Error submitting review: {e}", "danger")
         return redirect(url_for('product.detail', product_id=pid))  # Redirect on failure
-
