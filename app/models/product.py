@@ -32,7 +32,10 @@ WHERE id = :id
         JOIN Category ON Category.id = Products.category_id
         WHERE available = :available
         '''
-        
+        # if sort_by_price is True, modify the query to include filter
+        if category_id:
+        query += ' AND Products.category_id = :category_id'
+
         # if sort_by_price is True, modify the query to include ORDER BY
         if sort_by_price:
             query += f" ORDER BY Products.price {sort_order}"
@@ -115,6 +118,10 @@ WHERE id = :id
             WHERE uid = :customer_id AND pid = :product_id
         ''', customer_id=customer_id, product_id=product_id)
         return rows[0][0] > 0
+
+    def get_all_categories():
+        rows = app.db.execute('SELECT id, name FROM Category')
+        return [Category(id=row[0], name=row[1]) for row in rows]
 
 
 
