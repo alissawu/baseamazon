@@ -41,7 +41,8 @@ def index():
         avail_products=products,
         orders=orders,
         seller_products=seller_products,
-        cart_items=cart_items
+        cart_items=cart_items,
+        categories=categories
     )
 
 @bp.route('/order/<order_id>')

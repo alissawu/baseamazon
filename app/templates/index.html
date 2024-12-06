@@ -13,7 +13,7 @@
     </select>
     <button class="btn btn-primary" type="submit">Sort</button>
 </form>
-<form method="GET" action="/products">
+<form method="GET" action="/">
     <label for="category">Category:</label>
     <select name="category" id="category">
         <option value="">All Categories</option>
@@ -21,7 +21,7 @@
             <option value="{{ category.id }}" {% if request.args.get('category') == category.id %}selected{% endif %}>{{ category.name }}</option>
         {% endfor %}
     </select>
-    <button class="btn btn-secondary" type="submit">Filter</button>
+    <button class="btn btn-primary" type="submit">Filter</button>
 </form>
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
