@@ -12,13 +12,22 @@ def detail(product_id):
         flash("Product not found!", "danger")
         return redirect(url_for('index.index'))
 
-    reviews = Product.get_reviews(product_id)
-    avg_rating = Product.average_rating(product_id)  # Get average rating
-    review_count = Product.review_count(product_id)  # Get the number of reviews
+    sort_by = request.args.get("sort_by", "review_date")  # Default: review_date
+    order = request.args.get("order", "desc")  # Default: descending
 
-    print("DEBUG: Reviews fetched from DB:", reviews)
+    reviews = Product.get_reviews(product_id, sort_by=sort_by, order=order)
+    avg_rating = Product.average_rating(product_id)
+    review_count = Product.review_count(product_id)
 
-    return render_template('product.html', product=product, reviews=reviews, avg_rating=avg_rating, review_count=review_count)
+    return render_template(
+        'product.html', 
+        product=product, 
+        reviews=reviews, 
+        avg_rating=avg_rating, 
+        review_count=review_count,
+        sort_by=sort_by,
+        order=order
+    )
 
 
 # Route to handle listing of top k products

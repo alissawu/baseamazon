@@ -12,9 +12,14 @@ class Feedback:
 
     # Method to get the 5 most recent feedback (for both products and sellers)
     @staticmethod
-    def get_most_recent_feedback(user_id, limit=5):
-        # Use UNION ALL to combine product and seller reviews
-        reviews = app.db.execute('''
+    def get_most_recent_feedback(user_id, limit=5, sort_by="review_date", order="desc"):
+        valid_columns = ["review_date", "rating_num"]
+        if sort_by not in valid_columns:
+            sort_by = "review_date"  # Default sort column
+
+        sort_order = "DESC" if order.lower() == "desc" else "ASC"
+
+        reviews = app.db.execute(f'''
             (
                 SELECT id, customer_id, product_id AS target_id, rating_num, rating_message, review_date, true AS is_product
                 FROM UserReviewsProduct
@@ -26,17 +31,21 @@ class Feedback:
                 FROM UserReviewsSeller
                 WHERE customer_id = :user_id
             )
-            ORDER BY review_date DESC
+            ORDER BY {sort_by} {sort_order}
             LIMIT :limit
         ''', user_id=user_id, limit=limit)
 
-        # Return the most recent feedback items
         return [Feedback(*row) for row in reviews]
-    
+
     @staticmethod
-    def get_all_feedback(user_id):
-        # Combine product and seller reviews
-        reviews = app.db.execute('''
+    def get_all_feedback(user_id, sort_by="review_date", order="desc"):
+        valid_columns = ["review_date", "rating_num"]
+        if sort_by not in valid_columns:
+            sort_by = "review_date"
+
+        sort_order = "DESC" if order.lower() == "desc" else "ASC"
+
+        reviews = app.db.execute(f'''
             (
                 SELECT id, customer_id, product_id AS target_id, rating_num, rating_message, review_date, true AS is_product
                 FROM UserReviewsProduct
@@ -48,10 +57,9 @@ class Feedback:
                 FROM UserReviewsSeller
                 WHERE customer_id = :user_id
             )
-            ORDER BY review_date DESC
+            ORDER BY {sort_by} {sort_order}
         ''', user_id=user_id)
 
-        # Return all feedback items
         return [Feedback(*row) for row in reviews]
 
 

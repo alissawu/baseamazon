@@ -13,31 +13,25 @@ MAX_DESCRIPTION_LENGTH = 255
 # Displays all reviews made by the current user
 @bp.route('/product_rating')
 def product_rating():
-    # Pagination
     page = request.args.get('page', 1, type=int)
+    sort_by = request.args.get('sort_by', 'review_date')
+    order = request.args.get('order', 'desc')
+
     offset = (page - 1) * PER_PAGE
 
-    # Count total reviews by current user
+    reviews = app.db.execute(f'''
+        SELECT urp.product_ID, urp.rating_message, urp.rating_num, urp.review_date, p.name 
+        FROM UserReviewsProduct urp
+        JOIN Products p ON p.product_ID = urp.product_ID
+        WHERE urp.customer_ID = :uid
+        ORDER BY {sort_by} {"DESC" if order == "desc" else "ASC"}
+        LIMIT :limit OFFSET :offset
+    ''', uid=current_user.id, limit=PER_PAGE, offset=offset)
+
     total_result = app.db.execute('SELECT COUNT(*) AS total_count FROM UserReviewsProduct WHERE customer_ID = :uid', uid=current_user.id)
     total = total_result[0][0] if total_result else 0
 
-    # Ensure user is in the database
-    count = len(app.db.execute('SELECT id FROM Users WHERE id = :uid', uid=current_user.id))
-    if count > 0:
-        # Get all product reviews for the current user
-        reviews = app.db.execute('''
-            SELECT urp.product_ID, urp.rating_message, urp.rating_num, urp.review_date, p.name 
-            FROM UserReviewsProduct urp
-            JOIN Products p ON p.product_ID = urp.product_ID
-            WHERE urp.customer_ID = :uid
-            ORDER BY urp.review_date DESC
-            LIMIT :limit OFFSET :offset
-        ''', uid=current_user.id, limit=PER_PAGE, offset=offset)
-    else:
-        reviews = None
-
-    # Render the HTML file for product ratings
-    return render_template('product_rating.html', reviews=reviews, total=total, page=page, per_page=PER_PAGE)
+    return render_template('product_rating.html', reviews=reviews, total=total, page=page, per_page=PER_PAGE, sort_by=sort_by, order=order)
 
 # Redirect to edit review page while keeping product ID
 @bp.route('/redirect_to_edit_review', methods=['GET', 'POST'])

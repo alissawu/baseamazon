@@ -158,10 +158,28 @@ def purchase():
 @bp.route('/seller/<int:seller_id>', methods=['GET'])
 def seller_detail(seller_id):
     """Display seller details, reviews, and summary ratings."""
-    reviews = Seller.get_reviews(seller_id)
+    # Get sort parameters from the query string
+    sort_by = request.args.get('sort_by', 'review_date')  # Default to sorting by date
+    order = request.args.get('order', 'desc')  # Default to descending order
+
+    # Validate sort_by and order
+    valid_sort_columns = ['rating_num', 'review_date']
+    if sort_by not in valid_sort_columns:
+        sort_by = 'review_date'
+    if order not in ['asc', 'desc']:
+        order = 'desc'
+
+    # Query the reviews with sorting
+    reviews = app.db.execute(f'''
+        SELECT seller_id, rating_num, rating_message, customer_id, review_date
+        FROM UserReviewsSeller
+        WHERE seller_id = :seller_id
+        ORDER BY {sort_by} {order.upper()}
+    ''', seller_id=seller_id)
+
     avg_rating = Seller.average_rating(seller_id)
     review_count = Seller.review_count(seller_id)
-    
+
     # Check if the current user has already submitted a review for this seller
     user_review = None
     if current_user.is_authenticated:
@@ -178,8 +196,11 @@ def seller_detail(seller_id):
         reviews=reviews,
         avg_rating=avg_rating,
         review_count=review_count,
-        user_review=user_review
+        user_review=user_review,
+        sort_by=sort_by,
+        order=order,
     )
+
 
 
 @bp.route('/seller/<int:seller_id>/review', methods=['POST'])

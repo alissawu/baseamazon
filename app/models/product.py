@@ -46,21 +46,29 @@ WHERE available = :available
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def get_reviews(product_id):
-        rows = app.db.execute('''
+    def get_reviews(product_id, sort_by="review_date", order="desc"):
+        valid_columns = ["rating_num", "review_date"]
+        if sort_by not in valid_columns:
+            sort_by = "review_date"  # Default column
+
+        sort_order = "DESC" if order.lower() == "desc" else "ASC"
+        
+        query = f'''
             SELECT product_id, rating_num, rating_message, customer_id, review_date
             FROM UserReviewsProduct
             WHERE product_id = :product_id
-            ORDER BY review_date DESC
-        ''', product_id=product_id)
+            ORDER BY {sort_by} {sort_order}
+        '''
+        rows = app.db.execute(query, product_id=product_id)
 
         return [{
-            'product_id': row[0],  # Ensure product_id is the first column in SELECT
+            'product_id': row[0],
             'rating_num': row[1],
             'rating_message': row[2],
             'customer_id': row[3],
             'review_date': row[4]
         } for row in rows]
+
      # Method to calculate average rating for a product
     @staticmethod
     def average_rating(product_id):

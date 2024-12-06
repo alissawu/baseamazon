@@ -13,6 +13,8 @@ from app.cart import bp as cart_bp
 from app.products_rating import bp as product_rating_bp
 
 
+
+
 app = Flask(__name__)
 
 
@@ -29,6 +31,7 @@ def create_app():
 
     app.db = DB(app)
     login.init_app(app)
+
 
     from .index import bp as index_bp
     app.register_blueprint(index_bp)

@@ -44,21 +44,4 @@ class DB:
                 return result.fetchall()
             else:
                 return result.rowcount
-    def realign_sequences():
-        tables_and_sequences = [
-            {"table": "UserReviewsSeller", "sequence": "userreviewsseller_id_seq"},
-            {"table": "UserReviewsProduct", "sequence": "userreviewsproduct_id_seq"},
-        ]
 
-        for item in tables_and_sequences:
-            table = item["table"]
-            sequence = item["sequence"]
-
-            # Find the max ID in the table
-            max_id = app.db.execute(f"SELECT MAX(id) FROM {table}").fetchone()[0] or 0
-
-            # Align the sequence to the max ID + 1
-            app.db.execute(f"SELECT setval('{sequence}', {max_id + 1}, false)")
-            print(f"Sequence for {table} realigned to start from {max_id + 1}.")
-
-        

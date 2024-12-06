@@ -8,31 +8,36 @@
 <!-- Pagination and table for displaying product reviews -->
 <div class="container">
     {% if reviews %}
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Rating</th>
-                    <th scope="col">Review</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for review in reviews %}
-                    <tr>
-                        <td>{{ review.name }}</td>
-                        <td>{{ review.rating_num }}/5</td>
-                        <td>{{ review.rating_message }}</td>
-                        <td>{{ review.review_date.strftime('%Y-%m-%d') }}</td>
-                        <td>
-                            <a href="{{ url_for('product_rating.edit_review', pid=review.product_ID) }}" class="btn btn-primary">Edit</a>
-                            <a href="{{ url_for('product_rating.redirect_to_delete_review', pid=review.product_ID) }}" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Rating
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='rating_num', order='asc') }}">▲</a>
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='rating_num', order='desc') }}">▼</a>
+                </th>
+                <th scope="col">Review</th>
+                <th scope="col">Date
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='review_date', order='asc') }}">▲</a>
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='review_date', order='desc') }}">▼</a>
+                </th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td>{{ review.rating_num }}/5</td>
+                <td>{{ review.rating_message }}</td>
+                <td>{{ review.review_date.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('product_rating.edit_review', pid=review.product_ID) }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for('product_rating.redirect_to_delete_review', pid=review.product_ID) }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
 
         <!-- Pagination Controls -->
         <nav aria-label="Page navigation">

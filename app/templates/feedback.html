@@ -6,38 +6,37 @@
 
 <!-- Check if there is any feedback to display -->
 {% if feedback_items %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Type</th>
-                <th scope="col">Target ID</th>
-                <th scope="col">Rating</th>
-                <th scope="col">Message</th>
-                <th scope="col">Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Loop through each feedback item using Jinja templating -->
-            {% for feedback in feedback_items %}
-            <tr>
-                <!-- Product or Seller -->
-                <td>{{ 'Product' if feedback.is_product else 'Seller' }}</td>
-                
-                <!-- Display product_id or seller_id based on feedback type -->
-                <td>{{ feedback.target_id }}</td>
+  <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Target ID</th>
+            <th>
+                Rating
+                <a href="{{ url_for('feedback.get_recent_feedback', sort_by='rating_num', order='asc', acct_ID=request.args.get('acct_ID')) }}">▲</a>
+                <a href="{{ url_for('feedback.get_recent_feedback', sort_by='rating_num', order='desc', acct_ID=request.args.get('acct_ID')) }}">▼</a>
+            </th>
+            <th>Message</th>
+            <th>
+                Date
+                <a href="{{ url_for('feedback.get_recent_feedback', sort_by='review_date', order='asc', acct_ID=request.args.get('acct_ID')) }}">▲</a>
+                <a href="{{ url_for('feedback.get_recent_feedback', sort_by='review_date', order='desc', acct_ID=request.args.get('acct_ID')) }}">▼</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for feedback in feedback_items %}
+        <tr>
+            <td>{{ 'Product' if feedback.is_product else 'Seller' }}</td>
+            <td>{{ feedback.target_id }}</td>
+            <td>{{ feedback.rating_num }}</td>
+            <td>{{ feedback.rating_message }}</td>
+            <td>{{ feedback.review_date.strftime('%Y-%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
 
-                <!-- Display the rating -->
-                <td>{{ feedback.rating_num }}</td>
-
-                <!-- Display the feedback message -->
-                <td>{{ feedback.rating_message }}</td>
-
-                <!-- Display the date -->
-                <td>{{ feedback.review_date }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 {% else %}
     <p>No feedback available.</p>
 {% endif %}

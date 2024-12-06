@@ -7,52 +7,44 @@
 
 <!-- Display feedback items -->
 {% if feedback_items %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Type</th>
-            <th>Target ID</th>
-            <th>Rating</th>
-            <th>Message</th>
-            <th>Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for feedback in feedback_items %}
-        <tr>
-            <td>{{ 'Product' if feedback.is_product else 'Seller' }}</td>
-            <td>{{ feedback.target_id }}</td>
-            <td>{{ feedback.rating_num }}</td>
-            <td>{{ feedback.rating_message }}</td>
-            <td>{{ feedback.review_date }}</td>
-            <td>
-                <button class="btn btn-primary" onclick="toggleEditForm('{{ feedback.id }}')">Edit</button>
-                <form method="POST" action="{{ url_for('feedback.delete_review', review_id=feedback.id) }}" style="display: inline;">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        <!-- Inline Edit Form -->
-        <tr id="edit-form-{{ feedback.id }}" style="display: none;">
-            <td colspan="6">
-                <form method="POST" action="{{ url_for('feedback.edit_review', review_id=feedback.id) }}">
-                    <div class="form-group">
-                        <label for="rating_num">Rating (1-5):</label>
-                        <input type="number" id="rating_num" name="rating_num" class="form-control" value="{{ feedback.rating_num }}" min="1" max="5" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="rating_message">Message:</label>
-                        <textarea id="rating_message" name="rating_message" class="form-control" rows="3" maxlength="255" required>{{ feedback.rating_message }}</textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success">Update Review</button>
-                    <button type="button" class="btn btn-secondary" onclick="toggleEditForm('{{ feedback.id }}')">Cancel</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Target ID</th>
+                <th>
+                    Rating
+                    <a href="{{ url_for('feedback.user_feedback', sort_by='rating_num', order='asc') }}">▲</a>
+                    <a href="{{ url_for('feedback.user_feedback', sort_by='rating_num', order='desc') }}">▼</a>
+                </th>
+                <th>Message</th>
+                <th>
+                    Date
+                    <a href="{{ url_for('feedback.user_feedback', sort_by='review_date', order='asc') }}">▲</a>
+                    <a href="{{ url_for('feedback.user_feedback', sort_by='review_date', order='desc') }}">▼</a>
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feedback in feedback_items %}
+            <tr>
+                <td>{{ 'Product' if feedback.is_product else 'Seller' }}</td>
+                <td>{{ feedback.target_id }}</td>
+                <td>{{ feedback.rating_num }}</td>
+                <td>{{ feedback.rating_message }}</td>
+                <td>{{ feedback.review_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <button class="btn btn-primary" onclick="toggleEditForm('{{ feedback.id }}')">Edit</button>
+                    <form method="POST" action="{{ url_for('feedback.delete_review', review_id=feedback.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 {% else %}
 <p>No feedback available.</p>
 {% endif %}
