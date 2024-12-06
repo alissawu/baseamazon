@@ -39,3 +39,9 @@ def index():
         seller_products=seller_products,
         cart_items=cart_items
     )
+
+@bp.route('/order/<order_id>')
+def order_details(order_id):
+    # Fetch all details for a particular order
+    details = Purchase.get_order_details(order_id)
+    return render_template('order_details.html', order_details=details)

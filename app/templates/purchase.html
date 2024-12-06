@@ -44,7 +44,7 @@
               <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.product_name }}</a>
             </td>
             <td>
-              <a href="{{ url_for('product.detail', product_id=item.pid) }}">{{ item.product_price }}</a>
+              <a href="{{ url_for('product.detail', product_id=item.pid) }}">${{ item.product_price }}</a>
             </td>            
             <td>{{ item.time_purchased | humanize_time }}</td>
           </tr>

@@ -23,7 +23,7 @@
         <tr>
             <th scope="row">{{ product.id }}</th>
             <td>{{ product.name }}</td>
-            <td>{{ product.price }}</td>
+            <td>${{ product.price }}</td>
             <td>
                 <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
                     <input type="submit" value="Add to Wishlist" class="btn btn-primary"/>
@@ -65,6 +65,7 @@
             <th>Purchase Time</th>
             <th>Total Cost</th>
             <th>Total Items</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -72,8 +73,13 @@
         <tr>
             <td>{{ order.order_id }}</td>
             <td>{{ order.purchase_time | humanize_time }}</td>
-            <td>${{ "%.2f" | format(order.total_cost) }}</td>
+            <td>${{ "%.2f"|format(order.total_cost) }}</td>
             <td>{{ order.total_items }}</td>
+            <td>
+                <a href="{{ url_for('index.order_details', order_id=order.order_id) }}" class="btn btn-info">
+                    View Items
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
