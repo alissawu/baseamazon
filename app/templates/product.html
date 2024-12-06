@@ -44,8 +44,6 @@
 <div class="container mt-4">
     <h2>Product Information</h2>
     <p><strong>Price:</strong> ${{ product.price }}</p>
-    <p><strong>Description:</strong> {{ product.description }}</p>
-    <p><strong>Category:</strong> {{ product.category }}</p>
     <p><strong>Availability:</strong> {{ 'In Stock' if product.available else 'Out of Stock' }}</p>
 </div>
 
@@ -75,10 +73,32 @@
                 <td>{{ review.review_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                 {% if current_user.is_authenticated and review.customer_id == current_user.id %}
                     <td>
-                        <a href="{{ url_for('product_rating.edit_review', pid=product.id) }}" class="btn btn-primary">Edit</a>
-                        <a href="{{ url_for('product_rating.delete_review', pid=product.id) }}" class="btn btn-danger">Delete</a>
+                        <!-- Edit Button -->
+                        <button class="btn btn-primary" onclick="toggleEditForm('{{ review.product_id }}')">Edit</button>
+                        <form method="POST" action="{{ url_for('product_rating.delete_review', pid=review.product_id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        
                     </td>
                 {% endif %}
+            </tr>
+            <!-- Inline Edit Form -->
+            <tr id="edit-form-{{ review.product_id }}" style="display: none;">
+                <td colspan="5">
+                    <form method="POST" action="{{ url_for('product_rating.update_data') }}">
+                        <input type="hidden" name="pid" value="{{ review.product_id }}">
+                        <div class="form-group">
+                            <label for="stars">Rating (1-5):</label>
+                            <input type="number" id="stars" name="stars" class="form-control" value="{{ review.rating_num }}" min="1" max="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Message:</label>
+                            <textarea id="description" name="description" class="form-control" rows="3" maxlength="255" required>{{ review.rating_message }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Update Review</button>
+                        <button type="button" class="btn btn-secondary" onclick="toggleEditForm('{{ review.product_id }}')">Cancel</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -86,7 +106,6 @@
 {% else %}
     <p>No reviews available for this product. Be the first to review!</p>
 {% endif %}
-
 
 <!-- Add a review form -->
 {% if current_user.is_authenticated %}
@@ -110,5 +129,17 @@
 
 </div>
 {% endif %}
+
+<script>
+    function toggleEditForm(productId) {
+    const formRow = document.getElementById(`edit-form-${productId}`);
+    if (formRow) {
+        formRow.style.display = formRow.style.display === 'none' ? '' : 'none';
+    } else {
+        console.error(`Form row with ID edit-form-${productId} not found.`);
+    }
+}
+
+</script>
 
 {% endblock %}

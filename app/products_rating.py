@@ -62,29 +62,43 @@ def edit_review(pid):
     return render_template('edit_review.html', ratings=ratings[0], referring_page=referring_page)
 
 # Updates the review for a product
-@bp.route('/update_pr', methods=['GET', 'POST'])
+@bp.route('/update_pr', methods=['POST'])
 def update_data():
     # Get values for updating the review
     description = request.form.get('description')
     stars = request.form.get('stars')
     uid = current_user.id
     pid = request.form.get('pid')
-    referring_page = request.form.get('referring_page')
-    image_url = request.form.get('image_url')
 
-    # Query for updating the review
-    update_query = '''
-        UPDATE UserReviewsProduct 
-        SET rating_message = :description, rating_num = :stars, image_url = :image_url 
-        WHERE product_ID = :pid AND customer_ID = :uid
-    '''
-    app.db.execute(update_query, description=description, stars=stars, pid=pid, uid=uid, image_url=image_url)
+    try:
+        # Validate inputs
+        if not pid:
+            flash("Invalid product ID.", "danger")
+            return redirect(url_for('product.detail', product_id=pid))
 
-    # Redirect depending on where the user came from
-    if 'product_rating' in referring_page:
-        return redirect(url_for('product_rating.product_rating'))
-    else:
-        return redirect(url_for('products.product_details', pid=pid))
+        if not (1 <= int(stars) <= 5):
+            flash("Rating must be between 1 and 5.", "danger")
+            return redirect(url_for('product.detail', product_id=pid))
+
+        if len(description) > 255:
+            flash("Description is too long.", "danger")
+            return redirect(url_for('product.detail', product_id=pid))
+
+        # Query for updating the review
+        update_query = '''
+            UPDATE UserReviewsProduct 
+            SET rating_message = :description, rating_num = :stars 
+            WHERE product_ID = :pid AND customer_ID = :uid
+        '''
+        app.db.execute(update_query, description=description, stars=stars, pid=pid, uid=uid)
+
+        # Redirect back to the product page
+        flash("Review updated successfully!", "success")
+        return redirect(url_for('product.detail', product_id=pid))
+
+    except Exception as e:
+        flash(f"Error updating review: {e}", "danger")
+        return redirect(url_for('product.detail', product_id=pid))
 
 # Redirect to delete a review
 @bp.route('/redirect_to_delete_review', methods=['GET', 'POST'])
@@ -94,23 +108,25 @@ def redirect_to_delete_review():
     return redirect(url_for('product_rating.delete_review', pid=pid, referring_page=referring_page))
 
 # Deletes the review for the current user and product
-@bp.route('/delete_pr/<int:pid>', methods=['GET', 'POST'])
+@bp.route('/delete_pr/<int:pid>', methods=['POST'])
 def delete_review(pid):
     uid = current_user.id
-    referring_page = request.args.get('referring_page')
+    try:
+        # Query for deleting the review
+        delete_query = '''
+            DELETE FROM UserReviewsProduct 
+            WHERE product_ID = :pid AND customer_ID = :uid
+        '''
+        app.db.execute(delete_query, pid=pid, uid=uid)
 
-    # Query for deleting the review
-    delete_query = '''
-        DELETE FROM UserReviewsProduct 
-        WHERE product_ID = :pid AND customer_ID = :uid
-    '''
-    app.db.execute(delete_query, pid=pid, uid=uid)
+        # Redirect back to the product details page
+        flash("Review deleted successfully!", "success")
+        return redirect(url_for('product.detail', product_id=pid))
 
-    # Redirect depending on where the user came from
-    if 'product_rating' in referring_page:
-        return redirect(url_for('product_rating.product_rating'))
-    else:
-        return redirect(url_for('products.product_details', pid=pid))
+    except Exception as e:
+        flash(f"Error deleting review: {e}", "danger")
+        return redirect(url_for('product.detail', product_id=pid))
+
 
 # Redirect for adding a new review
 @bp.route('/redirect_to_add_review', methods=['GET', 'POST'])

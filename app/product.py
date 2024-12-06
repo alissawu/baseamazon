@@ -7,17 +7,18 @@ bp = Blueprint('product', __name__)
 
 @bp.route('/product/<int:product_id>', methods=['GET'])
 def detail(product_id):
-    # Fetch product details using the Product model
     product = Product.get(product_id)
     if not product:
         flash("Product not found!", "danger")
-        return redirect(url_for('index.index'))  # Redirect to the main page if product is not found
+        return redirect(url_for('index.index'))
 
-    # Fetch reviews for this product using the class method
     reviews = Product.get_reviews(product_id)
 
-    # Render the product details page with reviews
+    # Debugging: Print reviews to ensure product_id exists
+    print("DEBUG: Reviews fetched from DB:", reviews)
+
     return render_template('product.html', product=product, reviews=reviews)
+
 
 # Route to handle listing of top k products
 @bp.route('/product', methods=['GET', 'POST'])

@@ -48,16 +48,18 @@ WHERE available = :available
     @staticmethod
     def get_reviews(product_id):
         rows = app.db.execute('''
-            SELECT rating_num, rating_message, customer_id, review_date
+            SELECT product_id, rating_num, rating_message, customer_id, review_date
             FROM UserReviewsProduct
             WHERE product_id = :product_id
             ORDER BY review_date DESC
         ''', product_id=product_id)
 
-        # return reviews as dictionary objects
         return [{
-            'rating_num': row[0],
-            'rating_message': row[1],
-            'customer_id': row[2],
-            'review_date': row[3]
+            'product_id': row[0],  # Ensure product_id is the first column in SELECT
+            'rating_num': row[1],
+            'rating_message': row[2],
+            'customer_id': row[3],
+            'review_date': row[4]
         } for row in rows]
+
+
