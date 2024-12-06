@@ -93,11 +93,21 @@ class Seller:
     # update the quantity of a product in inventory
     @staticmethod
     def update_quantity_in_inventory(acct_ID, product_ID, new_quantity):
+        if new_quantity > 0:
+            available = True
+        else:
+            available = False
         app.db.execute('''
         UPDATE Seller
         SET quantity = :new_quantity
         WHERE acct_ID = :acct_ID AND product_ID = :product_ID
-        ''', acct_ID=acct_ID, product_ID=product_ID, new_quantity=new_quantity)
+        ''', acct_ID=acct_ID, product_ID=product_ID, new_quantity=new_quantity)             
+        
+        app.db.execute('''
+        UPDATE Products
+        SET available = :available
+        WHERE id = :product_ID
+        ''', product_ID=product_ID, available=available)
 
     # add a product to the database
     @staticmethod
