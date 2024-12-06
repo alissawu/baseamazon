@@ -19,7 +19,7 @@ class Product:
 SELECT Products.id, Products.name, Products.price, Products.available, Category.name
 FROM Products
 JOIN Category ON Category.id = Products.category_id
-WHERE id = :id
+WHERE Products.id = :id
 ''',
                               id=id)
         return Product(
