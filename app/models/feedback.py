@@ -9,6 +9,25 @@ class Feedback:
         self.rating_message = rating_message
         self.review_date = review_date
         self.is_product = is_product  # To differentiate product and seller reviews
+    
+    @staticmethod
+    def get_all_feedback_by_customer_id(customer_id):
+        rows = app.db.execute('''
+            (
+                SELECT id, customer_id, product_id AS target_id, rating_num, rating_message, review_date, true AS is_product
+                FROM UserReviewsProduct
+                WHERE customer_id = :customer_id
+            )
+            UNION ALL
+            (
+                SELECT id, customer_id, seller_id AS target_id, rating_num, rating_message, review_date, false AS is_product
+                FROM UserReviewsSeller
+                WHERE customer_id = :customer_id
+            )
+            ORDER BY review_date DESC
+        ''', customer_id=customer_id)
+
+        return [Feedback(*row) for row in rows]
 
     # Method to get the 5 most recent feedback (for both products and sellers)
     @staticmethod

@@ -71,8 +71,9 @@
     </h1>
     <div>
       {% if current_user.is_authenticated %}
-      <h2>Hello {{ current_user.firstname }}!</h2>
-      <p>Balance: ${{ "{:.2f}".format(current_user.account_balance) }}</p> <!-- Display Balance -->
+      <h2 style="color: #fff;">Hello {{ current_user.firstname }}!</h2>
+      <p style="color: #fff;">Balance: ${{ "{:.2f}".format(current_user.account_balance) }}</p> <!-- Display Balance -->
+      <a href="{{ url_for('users.view_profile') }}" class="btn btn-info">View Profile</a>
       <a href="{{ url_for('users.update_account') }}" class="btn btn-info">Update Profile</a>
       <a href="{{ url_for('users.logout') }}" class="btn btn-light">Log out</a>
       {% else %}

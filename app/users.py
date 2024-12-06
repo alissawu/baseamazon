@@ -7,6 +7,9 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Optional
 
 from .models.user import User
+from .models.wishlist import WishlistItem
+from .models.feedback import Feedback
+
 from app import db  # Ensure db is imported correctly
 
 from flask import Blueprint
@@ -57,6 +60,22 @@ def withdraw():
     else:
         flash("Invalid withdrawal amount.", "error")
     return redirect(url_for('users.update_account'))
+
+@bp.route('/view_profile', methods=['GET'])
+@login_required
+def view_profile():
+    # Assuming you have methods to fetch reviews and wishlist items for the user:
+    # Replace these function calls with the actual names and arguments as per your codebase.
+    posted_reviews = Feedback.get_all_feedback_by_customer_id(current_user.id)
+    wishlist_items = WishlistItem.get_all_by_uid(current_user.id)
+
+    return render_template(
+        'view_profile.html',
+        firstname=current_user.firstname,
+        lastname=current_user.lastname,
+        posted_reviews=posted_reviews,
+        wishlist=wishlist_items
+    )
 
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required

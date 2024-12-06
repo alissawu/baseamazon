@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>User Profile for {{ firstname }} {{ lastname }}</h3>
+
+<h3>Your Reviews</h3>
+{% if posted_reviews %}
+<table class="table table-hover table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Rating</th>
+            <th>Message</th>
+            <th>Date Posted</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for review in posted_reviews %}
+        <tr>
+            <td>{{ review.rating_num }}</td>
+            <td>{{ review.rating_message }}</td>
+            <td>{{ review.review_date }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>You have no reviews.</p>
+{% endif %}
+
+<h3>Your Wishlist</h3>
+{% if wishlist %}
+<table class="table table-hover table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Product Name</th>
+            <th>Price ($)</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in wishlist %}
+        <tr>
+            <td>{{ item.product_name }}</td>
+            <td>{{ "%.2f"|format(item.product_price) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>Your wishlist is empty.</p>
+{% endif %}
+{% endblock %}

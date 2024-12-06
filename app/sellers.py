@@ -170,6 +170,11 @@ def seller_detail(seller_id):
         order = 'desc'
 
     # Query the reviews with sorting
+    email = app.db.execute(f'''
+        SELECT email
+        FROM Users
+        WHERE Users.id = :seller_id
+    ''', seller_id=seller_id)
     reviews = app.db.execute(f'''
         SELECT seller_id, rating_num, rating_message, customer_id, review_date
         FROM UserReviewsSeller
@@ -193,6 +198,7 @@ def seller_detail(seller_id):
     return render_template(
         'seller_detail.html',
         seller_id=seller_id,
+        email=email[0][0],
         reviews=reviews,
         avg_rating=avg_rating,
         review_count=review_count,
