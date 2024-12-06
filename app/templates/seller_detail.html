@@ -16,15 +16,9 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Rating
-          <a href="?sort_by=rating_num&order={{ 'asc' if sort_by == 'rating_num' and order == 'desc' else 'desc' }}">▲</a>
-          <a href="?sort_by=rating_num&order={{ 'desc' if sort_by == 'rating_num' and order == 'asc' else 'asc' }}">▼</a>
-        </th>
+        <th>Rating</th>
         <th>Message</th>
-        <th>Date
-          <a href="?sort_by=review_date&order={{ 'asc' if sort_by == 'review_date' and order == 'desc' else 'desc' }}">▲</a>
-          <a href="?sort_by=review_date&order={{ 'desc' if sort_by == 'review_date' and order == 'asc' else 'asc' }}">▼</a>
-        </th>
+        <th>Date</th>
         {% if current_user.is_authenticated %}
           <th>Actions</th>
         {% endif %}
@@ -39,7 +33,7 @@
         {% if current_user.is_authenticated and review.customer_id == current_user.id %}
           <td>
             <!-- Edit Review -->
-            <button class="btn btn-primary" onclick="toggleEditForm('{{ review.seller_id }}')">Edit</button>
+            <button class="btn btn-primary" onclick="toggleEditForm('{{ review.id }}')">Edit</button>
             <!-- Delete Review -->
             <form method="POST" action="{{ url_for('sellers.delete_review', seller_id=seller_id) }}" style="display: inline;">
               <button type="submit" class="btn btn-danger">Delete</button>
@@ -48,22 +42,24 @@
         {% endif %}
       </tr>
       <!-- Inline Edit Form -->
-      <tr id="edit-form-{{ review.seller_id }}" style="display: none;">
-        <td colspan="5">
+      {% if current_user.is_authenticated and review.customer_id == current_user.id %}
+      <tr id="edit-form-{{ review.id }}" style="display: none;">
+        <td colspan="4">
           <form method="POST" action="{{ url_for('sellers.add_review', seller_id=seller_id) }}">
             <div class="form-group">
-              <label for="rating_num">Rating (1-5):</label>
-              <input type="number" id="rating_num" name="rating_num" class="form-control" value="{{ review.rating_num }}" min="1" max="5" required>
+              <label for="rating_num_{{ review.id }}">Rating (1-5):</label>
+              <input type="number" id="rating_num_{{ review.id }}" name="rating_num" class="form-control" value="{{ review.rating_num }}" min="1" max="5" required>
             </div>
             <div class="form-group">
-              <label for="rating_message">Message:</label>
-              <textarea id="rating_message" name="rating_message" class="form-control" rows="3" maxlength="255" required>{{ review.rating_message }}</textarea>
+              <label for="rating_message_{{ review.id }}">Message:</label>
+              <textarea id="rating_message_{{ review.id }}" name="rating_message" class="form-control" rows="3" maxlength="255" required>{{ review.rating_message }}</textarea>
             </div>
             <button type="submit" class="btn btn-success">Update Review</button>
-            <button type="button" class="btn btn-secondary" onclick="toggleEditForm('{{ review.seller_id }}')">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleEditForm('{{ review.id }}')">Cancel</button>
           </form>
         </td>
       </tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>
@@ -71,34 +67,27 @@
   <p>No reviews for this seller yet.</p>
 {% endif %}
 
-<!-- Add Review Form -->
-{% if current_user.is_authenticated %}
-  {% if not user_review %}
-    <h3>Add Your Review</h3>
-    <form method="POST" action="{{ url_for('sellers.add_review', seller_id=seller_id) }}">
-      <div class="form-group">
-        <label for="rating_num">Rating (1-5):</label>
-        <input type="number" id="rating_num" name="rating_num" class="form-control" min="1" max="5" required>
-      </div>
-      <div class="form-group">
-        <label for="rating_message">Message:</label>
-        <textarea id="rating_message" name="rating_message" class="form-control" rows="3" maxlength="255" required></textarea>
-      </div>
-      <button type="submit" class="btn btn-success">Submit Review</button>
-    </form>
-  {% else %}
-    <p>You have already reviewed this seller.</p>
-  {% endif %}
-{% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to leave a review.</p>
+{% if current_user.is_authenticated and not user_review %}
+  <!-- Add Review Form -->
+  <h3>Add Your Review</h3>
+  <form method="POST" action="{{ url_for('sellers.add_review', seller_id=seller_id) }}">
+    <div class="form-group">
+      <label for="rating_num">Rating (1-5):</label>
+      <input type="number" id="rating_num" name="rating_num" class="form-control" min="1" max="5" required>
+    </div>
+    <div class="form-group">
+      <label for="rating_message">Message:</label>
+      <textarea id="rating_message" name="rating_message" class="form-control" rows="3" maxlength="255" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Submit Review</button>
+  </form>
 {% endif %}
 
 <script>
-  function toggleEditForm(sellerId) {
-    const formRow = document.getElementById(`edit-form-${sellerId}`);
+  function toggleEditForm(reviewId) {
+    const formRow = document.getElementById(`edit-form-${reviewId}`);
     formRow.style.display = formRow.style.display === 'none' ? '' : 'none';
   }
 </script>
-
 
 {% endblock %}

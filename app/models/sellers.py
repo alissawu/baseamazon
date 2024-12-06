@@ -135,21 +135,23 @@ class Seller:
         ''', acct_ID=acct_ID, product_ID=product_ID, quantity=quantity)
     @staticmethod
     def get_reviews(seller_id):
-        """Retrieve all reviews for a seller, ordered by review_date."""
+        """Retrieve all reviews for a seller, ordered by review_date descending."""
         rows = app.db.execute('''
-            SELECT seller_id, rating_num, rating_message, customer_id, review_date
+            SELECT id, seller_id, rating_num, rating_message, customer_id, review_date
             FROM UserReviewsSeller
             WHERE seller_id = :seller_id
             ORDER BY review_date DESC
         ''', seller_id=seller_id)
 
         return [{
-            'seller_id': row[0],
-            'rating_num': row[1],
-            'rating_message': row[2],
-            'customer_id': row[3],
-            'review_date': row[4]
+            'id': row[0],
+            'seller_id': row[1],
+            'rating_num': row[2],
+            'rating_message': row[3],
+            'customer_id': row[4],
+            'review_date': row[5]
         } for row in rows]
+
 
     @staticmethod
     def average_rating(seller_id):
