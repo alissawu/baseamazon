@@ -12,7 +12,7 @@ bp = Blueprint('index', __name__)
 @bp.route('/')
 def index():
     sort_order = request.args.get('sort_order', 'ASC')  # default is 'ASC'
-    available = request.args.get('available', True) # defaul is true
+    available = request.args.get('available', True) # default is true
     products = Product.get_all(available=available, sort_by_price=True, sort_order=sort_order)
 
     acct_ID = request.args.get('acct_ID')
