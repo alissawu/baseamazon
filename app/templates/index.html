@@ -5,6 +5,14 @@
 <br><br>
 
 <h2>Products for Sale:</h2>
+<form method="GET" action="/products">
+    <label for="sort_by_price">Sort by price:</label>
+    <select name="sort_order" id="sort_by_price">
+        <option value="ASC">Low to High</option>
+        <option value="DESC">High to Low</option>
+    </select>
+    <button type="submit">Sort</button>
+</form>
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
     <tr>
