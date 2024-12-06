@@ -32,7 +32,7 @@ JOIN Category ON Category.id = Products.category_id
 WHERE available = :available
 ''',
                               available=available)
-        return [Products(
+        return [Product(
             id=row[0],
             name=row[1],
             price=row[2],
