@@ -1,12 +1,12 @@
-1,vanilla ice cream,2.99,true,Food
-2,chocolate ice cream,2.99,true,Food
-3,strawberry ice cream,2.99,true,Food
-4,6-pack of paycheck pilsners,11.49,true,Food
-5,seven fabergé easter eggs,1199000.00,true,Jewelry
-6,painting - the storm on the sea of galilee,44000000.00,true,Art
-7,tshirt,7.99,true,Shirts
-8,jacket,21.98,false,Jackets
-9,15 pack earrings,15.00,true,Jewelry
-10,phone charger,30.99,true,Electronics
-11,intro to databases,49.99,false,Books
-12,tote bag,9.99,true,Bags
+1,vanilla ice cream,2.99,true,0
+2,chocolate ice cream,2.99,true,0
+3,strawberry ice cream,2.99,true,0
+4,6-pack of paycheck pilsners,11.49,true,0
+5,seven fabergé easter eggs,1199000.00,true,1
+6,painting - the storm on the sea of galilee,44000000.00,true,2
+7,tshirt,7.99,true,3
+8,jacket,21.98,false,6
+9,15 pack earrings,15.00,true,1
+10,phone charger,30.99,true,4
+11,intro to databases,49.99,false,7
+12,tote bag,9.99,true,5
