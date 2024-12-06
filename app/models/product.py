@@ -8,11 +8,6 @@ class Product:
         self.price = price
         self.available = available
         self.category_name= category_name
-
-class Category:
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
     
     @classmethod
     def get_all_by_uid(cls, uid):
@@ -29,7 +24,6 @@ WHERE id = :id
         return Product(*rows[0]) if rows else None
 
     @staticmethod
-    
     def get_all(available=True, sort_by_price=False, sort_order='ASC', category_id=None):
         query = '''
         SELECT Products.id, Products.name, Products.price, Products.available, Category.name
@@ -123,10 +117,6 @@ WHERE id = :id
             WHERE uid = :customer_id AND pid = :product_id
         ''', customer_id=customer_id, product_id=product_id)
         return rows[0][0] > 0
-
-    def get_all_categories():
-        rows = app.db.execute('SELECT id, name FROM Category')
-        return [Category(id=row[0], name=row[1]) for row in rows]
 
 
 
