@@ -4,6 +4,8 @@ from app.models.cart import Cart
 from app.models.purchase import Purchase
 from datetime import datetime
 from humanize import naturaltime
+import uuid
+
 
 bp = Blueprint('cart', __name__)
 
@@ -50,9 +52,11 @@ def checkout():
             return redirect(url_for('cart.cart'))
 
         # Proceed with checkout
+        order_id = str(uuid.uuid4())
+
         for item in cart_items:
             # Add item to purchases
-            Purchase.add(current_user.id, item.pid)
+            Purchase.add(current_user.id, order_id, item.pid)
 
         # Deduct total cost from user's balance
         current_user.deduct(total_cost)

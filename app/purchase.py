@@ -4,6 +4,8 @@ from flask import current_app as app
 from app.models.purchase import Purchase
 from datetime import datetime
 from humanize import naturaltime
+import uuid
+
 
 bp = Blueprint('purchase', __name__)
 
@@ -55,8 +57,9 @@ def purchase_add(product_id):
         else:
             flash("Insufficient quantity available.")
             return redirect(url_for('purchase.purchase'))
+        order_id = str(uuid.uuid4())
         
-        Purchase.add(current_user.id, product_id)
+        Purchase.add(current_user.id, order_id, product_id)
         
         return redirect(url_for('purchase.purchase'))
     else:

@@ -11,41 +11,31 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/')
 def index():
-    # Get all available products for sale
     products = Product.get_all(True)
-
-    # Get the seller account ID from the query parameters
     acct_ID = request.args.get('acct_ID')
-    
-    # Initialize seller_products to None in case no account ID is provided
     seller_products = None
 
     if acct_ID:
         try:
-            acct_ID = int(acct_ID.strip())  # Ensure acct_ID is an integer
+            acct_ID = int(acct_ID.strip())
             seller_products = Seller.get_products_by_seller_id(acct_ID)
         except ValueError:
-            # If the provided acct_ID is invalid, handle it accordingly
             return "Invalid Account ID. Please enter a valid integer."
 
-    # Retrieve purchase history for authenticated users
+    # Use the order summaries if the user is authenticated
     if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0)
-        )
+        orders = Purchase.get_order_summaries_by_uid(current_user.id)
     else:
-        purchases = None
+        orders = None
 
-    # Optional: If you want to show cart items on the index page as well
     cart_items = None
     if current_user.is_authenticated:
         cart_items = Cart.get_all_by_uid(current_user.id)
 
-    # Render the main index page with available products, purchase history, and (optional) cart items
     return render_template(
         'index.html',
         avail_products=products,
-        purchase_history=purchases,
+        orders=orders,
         seller_products=seller_products,
-        cart_items=cart_items  # Pass cart items if used on index.html
+        cart_items=cart_items
     )
