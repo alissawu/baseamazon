@@ -11,7 +11,7 @@ SELECT pg_catalog.setval('public.products_id_seq', (SELECT MAX(id)+1 FROM Produc
 SELECT pg_catalog.setval('public.purchases_id_seq', (SELECT MAX(id)+1 FROM Purchases), false);
 
 -- Load Wishes
-\COPY Wishes FROM 'Wishes.csv' WITH DELIMITER ',' CSV HEADER;
+\COPY Wishes FROM 'Wishes.csv' WITH DELIMITER ',' CSV;
 SELECT pg_catalog.setval('public.wishes_id_seq', (SELECT MAX(id)+1 FROM Wishes), false);
 
 -- Load Seller

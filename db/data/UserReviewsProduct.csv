@@ -6,7 +6,7 @@ id,customer_id,product_id,rating_num,rating_message,review_date
 5,1,4,4,Good value for money.,2024-10-19 14:15:00
 6,1,5,3,Average quality.,2024-10-20 15:20:00
 7,2,1,2,Not what I expected.,2024-10-16 16:30:00
-8,2,2,5,Exceeded expectations.,2024-10-17 17:40:00
+8,2,10,5,Exceeded expectations.,2024-10-17 17:40:00
 9,2,3,4,Very useful product.,2024-10-18 18:50:00
 10,3,4,3,Decent product.,2024-10-19 19:55:00
 11,3,5,2,Could be better.,2024-10-20 20:00:00

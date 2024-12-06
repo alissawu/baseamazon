@@ -2,6 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 from .config import Config
 from .db import DB
+
 from app.wishlist import bp as wishlist_bp
 
 from app.purchase import bp as purchase_bp
@@ -59,9 +60,6 @@ def create_app():
 
     from app.products_rating import bp as product_rating_bp
     app.register_blueprint(product_rating_bp)
-
-
-
 
     
 

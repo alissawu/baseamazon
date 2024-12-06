@@ -54,6 +54,7 @@ CREATE TABLE UserReviewsSeller (
     review_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     UNIQUE (customer_id, seller_id) -- Unique constraint for one review per user per seller
 );
+
 CREATE TABLE Messages (
     msg_num SERIAL PRIMARY KEY,  -- Unique message ID
     customer_ID INT REFERENCES Users(id),  -- User who sent the message

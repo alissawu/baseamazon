@@ -160,4 +160,16 @@ class Seller:
             WHERE customer_id = :customer_id AND seller_id = :seller_id
         ''', customer_id=customer_id, seller_id=seller_id)
 
+    @staticmethod
+    def can_review_seller(customer_id, seller_id):
+        """Check if a user can review a seller (i.e., if they have purchased from them)."""
+        rows = app.db.execute('''
+            SELECT COUNT(*)
+            FROM Purchases
+            JOIN Seller ON Purchases.pid = Seller.product_ID
+            WHERE Purchases.uid = :customer_id AND Seller.acct_ID = :seller_id
+        ''', customer_id=customer_id, seller_id=seller_id)
+        return rows[0][0] > 0  # Returns True if the count is > 0
+
+
     
