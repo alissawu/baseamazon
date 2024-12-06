@@ -9,6 +9,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Op
 from .models.user import User
 from .models.wishlist import WishlistItem
 from .models.feedback import Feedback
+from .models.sellers import Seller
 
 from app import db  # Ensure db is imported correctly
 
@@ -64,18 +65,48 @@ def withdraw():
 @bp.route('/view_profile', methods=['GET'])
 @login_required
 def view_profile():
-    # Assuming you have methods to fetch reviews and wishlist items for the user:
-    # Replace these function calls with the actual names and arguments as per your codebase.
     posted_reviews = Feedback.get_all_feedback_by_customer_id(current_user.id)
     wishlist_items = WishlistItem.get_all_by_uid(current_user.id)
+
+    # Check if current user is a seller. 
+    # You may need a field in your User model or a method to verify this.
+    is_seller = Seller.get(current_user.id)
+
+    products = []
+    recent_sales = []
+    if is_seller:
+        products = Seller.get_products_by_seller_id(current_user.id)
+        recent_sales = Seller.get_recent_sales_by_seller_id(current_user.id)
 
     return render_template(
         'view_profile.html',
         firstname=current_user.firstname,
         lastname=current_user.lastname,
         posted_reviews=posted_reviews,
-        wishlist=wishlist_items
+        wishlist=wishlist_items,
+        is_seller=is_seller,
+        products=products,
+        recent_sales=recent_sales
     )
+
+@bp.route('/update_inventory', methods=['POST'])
+@login_required
+def update_inventory():
+    is_seller = Seller.get(current_user.id)
+    if not is_seller:
+        flash("You are not authorized to update inventory.", "error")
+        return redirect(url_for('users.view_profile'))
+
+    product_id = request.form.get('product_id', type=int)
+    new_quantity = request.form.get('new_quantity', type=int)
+
+    if product_id is None or new_quantity is None or new_quantity < 0:
+        flash("Invalid inventory update.", "error")
+        return redirect(url_for('users.view_profile'))
+
+    Seller.update_quantity_in_inventory(current_user.id, product_id, new_quantity)
+    flash("Inventory updated.", "success")
+    return redirect(url_for('users.view_profile'))
 
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required

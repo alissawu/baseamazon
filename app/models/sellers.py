@@ -11,6 +11,36 @@ class Seller:
         self.available = available
         self.quantity = quantity
 
+    @staticmethod
+    def get(acct_ID):
+        rows = app.db.execute('''
+        SELECT *
+        FROM seller
+        WHERE acct_ID = :acct_ID
+        ''', acct_ID=acct_ID)
+        return Seller(*rows[0]) if rows else None
+    
+    @staticmethod
+    def get_recent_sales_by_seller_id(acct_ID):
+        rows = app.db.execute('''
+            SELECT Purchases.order_id,
+                COUNT(*) AS total_quantity,
+                MIN(Purchases.time_purchased) AS sale_date,
+                SUM(Products.price) AS total_price
+            FROM Purchases
+            JOIN Seller ON Purchases.pid = Seller.product_ID
+            JOIN Products ON Products.id = Seller.product_ID
+            WHERE Seller.acct_ID = :acct_ID
+            GROUP BY Purchases.order_id
+            ORDER BY sale_date DESC
+        ''', acct_ID=acct_ID)
+        
+        return [{
+            'order_id': row[0],
+            'total_quantity': row[1],
+            'sale_date': row[2],
+            'total_price': row[3]
+        } for row in rows]
 
     # get products for a specific seller
     @staticmethod
