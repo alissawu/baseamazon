@@ -27,5 +27,5 @@ SELECT pg_catalog.setval('public.userreviewsproduct_id_seq', (SELECT MAX(id)+1 F
 SELECT pg_catalog.setval('public.userreviewsseller_id_seq', (SELECT MAX(id)+1 FROM UserReviewsSeller), false);
 
 -- Load Category
-\COPY Category FROM 'Category.csv' WITH DELIMITER ',' NULL '' CSV HEADER;
+\COPY Category FROM 'Category.csv' WITH DELIMITER ',' NULL '' CSV;
 SELECT pg_catalog.setval('public.category_id_seq', (SELECT MAX(id)+1 FROM Category), false);
