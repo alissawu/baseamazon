@@ -22,13 +22,16 @@ JOIN Category ON Category.id = Products.category_id
 WHERE Products.id = :id
 ''',
                               id=id)
+        if rows:
+            row = rows[0]  # Access the first row (since you're expecting one product)
         return Product(
             id=row[0],
             name=row[1],
             price=row[2],
             available=row[3],
-            category_name=row[4]
-            ) if rows else None
+            category_id=row[4]
+        )
+        return None
 
     @staticmethod
     def get_all(available=True, sort_by_price=False, sort_order='ASC', category_id=None):
