@@ -50,9 +50,11 @@ class Purchase:
             SELECT Purchases.id,
                 P.name,
                 P.price,
-                Purchases.time_purchased
+                Purchases.time_purchased,
+                S.acct_id
             FROM Purchases
             JOIN Products P ON Purchases.pid = P.id
+            JOIN Seller S on P.id = S.product_ID
             WHERE order_id = :order_id
             ORDER BY time_purchased
         ''', order_id=order_id)
