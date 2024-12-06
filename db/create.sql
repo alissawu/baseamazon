@@ -22,7 +22,7 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     available BOOLEAN DEFAULT TRUE,
-    category_id INT NOT NULL REFERENCES Category(id)
+    category_id INT NOT NULL
 );
 
 CREATE TABLE Purchases (
