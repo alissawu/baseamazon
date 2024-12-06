@@ -3,11 +3,13 @@
 {% block content %}
 <h1>Seller {{ seller_id }}'s Public Profile</h1>
 
+<!-- Review Summary -->
 <div>
   <h4>Average Rating: {{ avg_rating|round(1) }}/5</h4>
   <p>Number of Reviews: {{ review_count }}</p>
 </div>
 
+<!-- Reviews Section -->
 <h2>Reviews</h2>
 {% if reviews %}
   <table class="table table-striped">
@@ -31,16 +33,31 @@
         <td>{{ review.review_date.strftime('%Y-%m-%d') }}</td>
         {% if current_user.is_authenticated and review.customer_id == current_user.id %}
           <td>
-            <form method="POST" action="{{ url_for('sellers.add_review', seller_id=seller_id) }}">
-              <input type="hidden" name="rating_num" value="{{ review.rating_num }}">
-              <textarea name="rating_message">{{ review.rating_message }}</textarea>
-              <button type="submit" class="btn btn-primary">Edit</button>
-            </form>
-            <form method="POST" action="{{ url_for('sellers.delete_review', seller_id=seller_id) }}">
+            <!-- Edit Review -->
+            <button class="btn btn-primary" onclick="toggleEditForm('{{ review.seller_id }}')">Edit</button>
+            <!-- Delete Review -->
+            <form method="POST" action="{{ url_for('sellers.delete_review', seller_id=seller_id) }}" style="display: inline;">
               <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </td>
         {% endif %}
+      </tr>
+      <!-- Inline Edit Form -->
+      <tr id="edit-form-{{ review.seller_id }}" style="display: none;">
+        <td colspan="5">
+          <form method="POST" action="{{ url_for('sellers.add_review', seller_id=seller_id) }}">
+            <div class="form-group">
+              <label for="rating_num">Rating (1-5):</label>
+              <input type="number" id="rating_num" name="rating_num" class="form-control" value="{{ review.rating_num }}" min="1" max="5" required>
+            </div>
+            <div class="form-group">
+              <label for="rating_message">Message:</label>
+              <textarea id="rating_message" name="rating_message" class="form-control" rows="3" maxlength="255" required>{{ review.rating_message }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Update Review</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleEditForm('{{ review.seller_id }}')">Cancel</button>
+          </form>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -49,16 +66,33 @@
   <p>No reviews for this seller yet.</p>
 {% endif %}
 
+<!-- Add Review Form -->
 {% if current_user.is_authenticated %}
-<h3>Add Your Review</h3>
-<form method="POST" action="{{ url_for('sellers.add_review', seller_id=seller_id) }}">
-  <label for="rating_num">Rating (1-5):</label>
-  <input type="number" id="rating_num" name="rating_num" min="1" max="5" required>
-  <label for="rating_message">Message:</label>
-  <textarea id="rating_message" name="rating_message" required></textarea>
-  <button type="submit" class="btn btn-success">Submit Review</button>
-</form>
+  {% if not user_review %}
+    <h3>Add Your Review</h3>
+    <form method="POST" action="{{ url_for('sellers.add_review', seller_id=seller_id) }}">
+      <div class="form-group">
+        <label for="rating_num">Rating (1-5):</label>
+        <input type="number" id="rating_num" name="rating_num" class="form-control" min="1" max="5" required>
+      </div>
+      <div class="form-group">
+        <label for="rating_message">Message:</label>
+        <textarea id="rating_message" name="rating_message" class="form-control" rows="3" maxlength="255" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Submit Review</button>
+    </form>
+  {% else %}
+    <p>You have already reviewed this seller.</p>
+  {% endif %}
 {% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to add a review.</p>
+  <p><a href="{{ url_for('users.login') }}">Log in</a> to leave a review.</p>
 {% endif %}
+
+<script>
+  function toggleEditForm(sellerId) {
+    const formRow = document.getElementById(`edit-form-${sellerId}`);
+    formRow.style.display = formRow.style.display === 'none' ? '' : 'none';
+  }
+</script>
+
 {% endblock %}

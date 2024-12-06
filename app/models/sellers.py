@@ -159,3 +159,5 @@ class Seller:
             DELETE FROM UserReviewsSeller
             WHERE customer_id = :customer_id AND seller_id = :seller_id
         ''', customer_id=customer_id, seller_id=seller_id)
+
+    

@@ -161,13 +161,26 @@ def seller_detail(seller_id):
     reviews = Seller.get_reviews(seller_id)
     avg_rating = Seller.average_rating(seller_id)
     review_count = Seller.review_count(seller_id)
+    
+    # Check if the current user has already submitted a review for this seller
+    user_review = None
+    if current_user.is_authenticated:
+        user_review = app.db.execute('''
+            SELECT seller_id, rating_num, rating_message 
+            FROM UserReviewsSeller 
+            WHERE customer_id = :customer_id AND seller_id = :seller_id
+        ''', customer_id=current_user.id, seller_id=seller_id)
+        user_review = user_review[0] if user_review else None
+
     return render_template(
-        'seller.html',
+        'seller_detail.html',
         seller_id=seller_id,
         reviews=reviews,
         avg_rating=avg_rating,
-        review_count=review_count
+        review_count=review_count,
+        user_review=user_review
     )
+
 
 @bp.route('/seller/<int:seller_id>/review', methods=['POST'])
 def add_review(seller_id):
@@ -177,9 +190,32 @@ def add_review(seller_id):
 
     rating_num = int(request.form['rating_num'])
     rating_message = request.form['rating_message']
-    Seller.add_review(current_user.id, seller_id, rating_num, rating_message)
-    flash('Review submitted successfully!', 'success')
+
+    # Check if the user already reviewed this seller
+    existing_review = app.db.execute('''
+        SELECT id 
+        FROM UserReviewsSeller
+        WHERE customer_id = :customer_id AND seller_id = :seller_id
+    ''', customer_id=current_user.id, seller_id=seller_id)
+
+    if existing_review:
+        # Update the review
+        app.db.execute('''
+            UPDATE UserReviewsSeller 
+            SET rating_num = :rating_num, rating_message = :rating_message, review_date = current_timestamp
+            WHERE customer_id = :customer_id AND seller_id = :seller_id
+        ''', rating_num=rating_num, rating_message=rating_message, customer_id=current_user.id, seller_id=seller_id)
+        flash('Review updated successfully!', 'success')
+    else:
+        # Insert a new review
+        app.db.execute('''
+            INSERT INTO UserReviewsSeller (customer_id, seller_id, rating_num, rating_message, review_date)
+            VALUES (:customer_id, :seller_id, :rating_num, :rating_message, current_timestamp)
+        ''', customer_id=current_user.id, seller_id=seller_id, rating_num=rating_num, rating_message=rating_message)
+        flash('Review submitted successfully!', 'success')
+
     return redirect(url_for('sellers.seller_detail', seller_id=seller_id))
+
 
 @bp.route('/seller/<int:seller_id>/review/delete', methods=['POST'])
 def delete_review(seller_id):
@@ -187,6 +223,10 @@ def delete_review(seller_id):
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
 
-    Seller.delete_review(current_user.id, seller_id)
+    app.db.execute('''
+        DELETE FROM UserReviewsSeller 
+        WHERE customer_id = :customer_id AND seller_id = :seller_id
+    ''', customer_id=current_user.id, seller_id=seller_id)
     flash('Review deleted successfully!', 'success')
+
     return redirect(url_for('sellers.seller_detail', seller_id=seller_id))

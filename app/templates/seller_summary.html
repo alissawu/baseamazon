@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Seller Summary Ratings</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Seller ID</th>
+            <th>Average Rating</th>
+            <th>Number of Reviews</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for seller in summary %}
+        <tr>
+            <td>
+                <a href="{{ url_for('sellers.seller_detail', seller_id=seller.seller_id) }}">
+                    Seller {{ seller.seller_id }}
+                </a>
+            </td>
+            <td>{{ seller.avg_rating|round(1) }}</td>
+            <td>{{ seller.review_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
