@@ -34,7 +34,7 @@ WHERE id = :id
         '''
         # if sort_by_price is True, modify the query to include filter
         if category_id:
-        query += ' AND Products.category_id = :category_id'
+            query += ' AND Products.category_id = :category_id'
 
         # if sort_by_price is True, modify the query to include ORDER BY
         if sort_by_price:
