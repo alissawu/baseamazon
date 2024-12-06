@@ -2,12 +2,13 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, available, category_id):
+    def __init__(self, id, name, price, available, category_id, category_name):
         self.id = id
         self.name = name
         self.price = price
         self.available = available
-        self.category_id = category_id
+        self.category_id= category_id
+        self.category_name= category_name
     
     @classmethod
     def get_all_by_uid(cls, uid):
@@ -37,7 +38,7 @@ WHERE available = :available
             name=row[1],
             price=row[2],
             available=row[3],
-            cat_name=row[4]
+            category_name=row[4]
             ) for row in rows]
     
     # Method to get the top k most expensive products
