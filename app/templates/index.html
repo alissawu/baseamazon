@@ -11,9 +11,10 @@
         <th scope="col">Product ID</th>
         <th scope="col">Product Name</th>
         <th scope="col">Price</th>
+        <th scope="col">Category</th>
         <th scope="col">Actions</th> <!-- Add to Wishlist button -->
         <th scope="col">Actions</th> <!-- Add to Cart button -->
-        <th scope="col"></th> <!-- Purchase button -->
+        <th scope="col">Purhase</th> <!-- Purchase button -->
         <th scope="col">Details</th> <!-- View Details button -->
     </tr>
     </tr>
@@ -24,6 +25,7 @@
             <th scope="row">{{ product.id }}</th>
             <td>{{ product.name }}</td>
             <td>${{ product.price }}</td>
+            <td>${{ product.category }}</td>
             <td>
                 <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
                     <input type="submit" value="Add to Wishlist" class="btn btn-primary"/>
