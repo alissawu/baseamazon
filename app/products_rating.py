@@ -22,7 +22,8 @@ def product_rating():
     reviews = app.db.execute(f'''
         SELECT urp.product_ID, urp.rating_message, urp.rating_num, urp.review_date, p.name 
         FROM UserReviewsProduct urp
-        JOIN Products p ON p.product_ID = urp.product_ID
+        JOIN Products p ON p.id = urp.product_id
+
         WHERE urp.customer_ID = :uid
         ORDER BY {sort_by} {"DESC" if order == "desc" else "ASC"}
         LIMIT :limit OFFSET :offset

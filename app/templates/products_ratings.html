@@ -12,28 +12,28 @@
         <thead>
             <tr>
                 <th scope="col">Rating
-                    <a href="{{ url_for('product_rating.product_rating', sort_by='rating_num', order='asc') }}">▲</a>
-                    <a href="{{ url_for('product_rating.product_rating', sort_by='rating_num', order='desc') }}">▼</a>
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='rating_num', order='asc') }}">&#9650;</a>
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='rating_num', order='desc') }}">&#9660;</a>
                 </th>
                 <th scope="col">Review</th>
                 <th scope="col">Date
-                    <a href="{{ url_for('product_rating.product_rating', sort_by='review_date', order='asc') }}">▲</a>
-                    <a href="{{ url_for('product_rating.product_rating', sort_by='review_date', order='desc') }}">▼</a>
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='review_date', order='asc') }}">&#9650;</a>
+                    <a href="{{ url_for('product_rating.product_rating', sort_by='review_date', order='desc') }}">&#9660;</a>
                 </th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for review in reviews %}
-            <tr>
-                <td>{{ review.rating_num }}/5</td>
-                <td>{{ review.rating_message }}</td>
-                <td>{{ review.review_date.strftime('%Y-%m-%d') }}</td>
-                <td>
-                    <a href="{{ url_for('product_rating.edit_review', pid=review.product_ID) }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ url_for('product_rating.redirect_to_delete_review', pid=review.product_ID) }}" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>{{ review.rating_num }}/5</td>
+                    <td>{{ review.rating_message }}</td>
+                    <td>{{ review.review_date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('products_ratings.edit_review', pid=review.product_ID) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url_for('products_ratings.redirect_to_delete_review', pid=review.product_ID) }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

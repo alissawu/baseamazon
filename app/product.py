@@ -46,7 +46,7 @@ def products():
 
     # Query to find the top k most expensive products
     top_products_query = '''
-        SELECT product_ID, name, price, description, category, image
+        SELECT id, name, price, available
         FROM Products
         ORDER BY price DESC
         LIMIT :k

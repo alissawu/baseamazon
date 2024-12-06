@@ -118,7 +118,8 @@
 
 <!-- Add a review form -->
 {% if current_user.is_authenticated %}
-    {% if not reviews or not reviews|selectattr('customer_id', 'equalto', current_user.id) %}
+    {% set user_review = reviews|selectattr('customer_id', 'equalto', current_user.id)|list %}
+    {% if user_review|length == 0 %}
         <h3>Add Your Review</h3>
         <form method="POST" action="{{ url_for('product_rating.insert_data') }}">
             <div class="form-group">
@@ -129,7 +130,6 @@
                 <label for="description">Message:</label>
                 <textarea id="description" name="description" class="form-control" rows="3" maxlength="255" required></textarea>
             </div>
-            <!-- Hidden input for the product ID -->
             <input type="hidden" name="pid" value="{{ product.id }}">
             <button type="submit" class="btn btn-success">Submit Review</button>
         </form>
@@ -139,6 +139,8 @@
 {% else %}
     <p><a href="{{ url_for('users.login') }}">Log in</a> to add a review.</p>
 {% endif %}
+
+
 
 </div>
 {% endif %}
