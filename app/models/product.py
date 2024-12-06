@@ -39,7 +39,7 @@ WHERE id = :id
         if sort_by_price:
             query += f" ORDER BY Products.price {sort_order}"
         
-        rows = app.db.execute(query, available=available)
+        rows = app.db.execute(query, available=available, category_id=category_id)
         
         return [Product(
             id=row[0],
