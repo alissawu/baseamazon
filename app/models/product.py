@@ -16,12 +16,19 @@ class Product:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, name, price, available
+SELECT id, name, price, available, Category.name
 FROM Products
+JOIN Category ON Category.id = Products.category_id
 WHERE id = :id
 ''',
                               id=id)
-        return Product(*rows[0]) if rows else None
+        return Product(
+            id=row[0],
+            name=row[1],
+            price=row[2],
+            available=row[3],
+            category_name=row[4]
+            ) if rows else None
 
     @staticmethod
     def get_all(available=True, sort_by_price=False, sort_order='ASC', category_id=None):
@@ -117,6 +124,7 @@ WHERE id = :id
             WHERE uid = :customer_id AND pid = :product_id
         ''', customer_id=customer_id, product_id=product_id)
         return rows[0][0] > 0
+
 
 
 
