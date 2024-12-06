@@ -25,27 +25,27 @@ WHERE id = :id
 
     @staticmethod
     
-def get_all(available=True, sort_by_price=False, sort_order='ASC'):
-    query = '''
-    SELECT Products.id, Products.name, Products.price, Products.available, Category.name
-    FROM Products
-    JOIN Category ON Category.id = Products.category_id
-    WHERE available = :available
-    '''
-    
-    # if sort_by_price is True, modify the query to include ORDER BY
-    if sort_by_price:
-        query += f" ORDER BY Products.price {sort_order}"
-    
-    rows = app.db.execute(query, available=available)
-    
-    return [Product(
-        id=row[0],
-        name=row[1],
-        price=row[2],
-        available=row[3],
-        category_name=row[4]
-        ) for row in rows]
+    def get_all(available=True, sort_by_price=False, sort_order='ASC'):
+        query = '''
+        SELECT Products.id, Products.name, Products.price, Products.available, Category.name
+        FROM Products
+        JOIN Category ON Category.id = Products.category_id
+        WHERE available = :available
+        '''
+        
+        # if sort_by_price is True, modify the query to include ORDER BY
+        if sort_by_price:
+            query += f" ORDER BY Products.price {sort_order}"
+        
+        rows = app.db.execute(query, available=available)
+        
+        return [Product(
+            id=row[0],
+            name=row[1],
+            price=row[2],
+            available=row[3],
+            category_name=row[4]
+            ) for row in rows]
 
     
     # Method to get the top k most expensive products
