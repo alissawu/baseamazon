@@ -16,21 +16,21 @@ class Product:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT Products.id, Products.name, Products.price, Products.available, Category.name
-FROM Products
-JOIN Category ON Category.id = Products.category_id
-WHERE Products.id = :id
-''',
+        SELECT Products.id, Products.name, Products.price, Products.available, Category.name
+        FROM Products
+        JOIN Category ON Category.id = Products.category_id
+        WHERE Products.id = :id
+        ''',
                               id=id)
         if rows:
             row = rows[0]  # Access the first row (since you're expecting one product)
-        return Product(
-            id=row[0],
-            name=row[1],
-            price=row[2],
-            available=row[3],
-            category_name=row[4]
-        )
+            return Product(
+                id=row[0],
+                name=row[1],
+                price=row[2],
+                available=row[3],
+                category_name=row[4]
+            )
         return None
 
     @staticmethod

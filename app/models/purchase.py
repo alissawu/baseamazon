@@ -51,7 +51,8 @@ class Purchase:
                 P.name,
                 P.price,
                 Purchases.time_purchased,
-                S.acct_id
+                S.acct_id,
+                P.id
             FROM Purchases
             JOIN Products P ON Purchases.pid = P.id
             JOIN Seller S on P.id = S.product_ID
