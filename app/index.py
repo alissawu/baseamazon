@@ -5,13 +5,19 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.sellers import Seller
 from .models.cart import Cart
+from .models.category import Category
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
 @bp.route('/')
 def index():
-    products = Product.get_all(True)
+    sort_order = request.args.get('sort_order', 'ASC')  # default is 'ASC'
+    available = request.args.get('available', True) # default is true
+    category_id = request.args.get('category')
+    products = Product.get_all(available=available, sort_by_price=True, sort_order=sort_order, category_id=category_id)
+    categories = Category.get_all_categories()
+
     acct_ID = request.args.get('acct_ID')
     seller_products = None
 
@@ -37,7 +43,8 @@ def index():
         avail_products=products,
         orders=orders,
         seller_products=seller_products,
-        cart_items=cart_items
+        cart_items=cart_items,
+        categories=categories
     )
 
 @bp.route('/order/<order_id>')

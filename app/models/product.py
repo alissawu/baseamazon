@@ -2,11 +2,12 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, available):
+    def __init__(self, id, name, price, available, category_name):
         self.id = id
         self.name = name
         self.price = price
         self.available = available
+        self.category_name= category_name
     
     @classmethod
     def get_all_by_uid(cls, uid):
@@ -15,22 +16,49 @@ class Product:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, name, price, available
+SELECT Products.id, Products.name, Products.price, Products.available, Category.name
 FROM Products
-WHERE id = :id
+JOIN Category ON Category.id = Products.category_id
+WHERE Products.id = :id
 ''',
                               id=id)
-        return Product(*rows[0]) if rows else None
+        if rows:
+            row = rows[0]  # Access the first row (since you're expecting one product)
+        return Product(
+            id=row[0],
+            name=row[1],
+            price=row[2],
+            available=row[3],
+            category_name=row[4]
+        )
+        return None
 
     @staticmethod
-    def get_all(available=True):
-        rows = app.db.execute('''
-SELECT id, name, price, available
-FROM Products
-WHERE available = :available
-''',
-                              available=available)
-        return [Product(*row) for row in rows]
+    def get_all(available=True, sort_by_price=False, sort_order='ASC', category_id=None):
+        query = '''
+        SELECT Products.id, Products.name, Products.price, Products.available, Category.name
+        FROM Products
+        JOIN Category ON Category.id = Products.category_id
+        WHERE available = :available
+        '''
+        # if sort_by_price is True, modify the query to include filter
+        if category_id:
+            query += ' AND Products.category_id = :category_id'
+
+        # if sort_by_price is True, modify the query to include ORDER BY
+        if sort_by_price:
+            query += f" ORDER BY Products.price {sort_order}"
+        
+        rows = app.db.execute(query, available=available, category_id=category_id)
+        
+        return [Product(
+            id=row[0],
+            name=row[1],
+            price=row[2],
+            available=row[3],
+            category_name=row[4]
+            ) for row in rows]
+
     
     # Method to get the top k most expensive products
     @staticmethod
@@ -99,6 +127,7 @@ WHERE available = :available
             WHERE uid = :customer_id AND pid = :product_id
         ''', customer_id=customer_id, product_id=product_id)
         return rows[0][0] > 0
+
 
 
 

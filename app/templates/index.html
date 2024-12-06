@@ -5,15 +5,34 @@
 <br><br>
 
 <h2>Products for Sale:</h2>
+<form method="GET" action="/">
+    <label for="sort_by_price">Sort by price:</label>
+    <select name="sort_order" id="sort_by_price">
+        <option value="ASC" {% if request.args.get('sort_order') == 'ASC' %}selected{% endif %}>Low to High</option>
+        <option value="DESC" {% if request.args.get('sort_order') == 'DESC' %}selected{% endif %}>High to Low</option>
+    </select>
+    <button class="btn btn-primary" type="submit">Sort</button>
+</form>
+<form method="GET" action="/">
+    <label for="category">Category:</label>
+    <select name="category" id="category">
+        <option value="">All Categories</option>
+        {% for category in categories %}
+            <option value="{{ category.id }}" {% if request.args.get('category') == category.id %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">Filter</button>
+</form>
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
     <tr>
         <th scope="col">Product ID</th>
         <th scope="col">Product Name</th>
         <th scope="col">Price</th>
+        <th scope="col">Category</th>
         <th scope="col">Actions</th> <!-- Add to Wishlist button -->
         <th scope="col">Actions</th> <!-- Add to Cart button -->
-        <th scope="col"></th> <!-- Purchase button -->
+        <th scope="col">Purhase</th> <!-- Purchase button -->
         <th scope="col">Details</th> <!-- View Details button -->
     </tr>
     </tr>
@@ -24,6 +43,7 @@
             <th scope="row">{{ product.id }}</th>
             <td>{{ product.name }}</td>
             <td>${{ product.price }}</td>
+            <td>{{ product.category_name }}</td>
             <td>
                 <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
                     <input type="submit" value="Add to Wishlist" class="btn btn-primary"/>
