@@ -10,6 +10,9 @@ from app.sellers import bp as sellers_bp
 
 from app.cart import bp as cart_bp
 
+from app.products_rating import bp as product_rating_bp
+
+
 app = Flask(__name__)
 
 
@@ -50,6 +53,10 @@ def create_app():
 
     from .cart import bp as cart_bp
     app.register_blueprint(cart_bp)
+
+    from app.products_rating import bp as product_rating_bp
+    app.register_blueprint(product_rating_bp)
+
 
 
 

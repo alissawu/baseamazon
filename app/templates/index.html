@@ -14,6 +14,8 @@
         <th scope="col">Actions</th> <!-- Add to Wishlist button -->
         <th scope="col">Actions</th> <!-- Add to Cart button -->
         <th scope="col"></th> <!-- Purchase button -->
+        <th scope="col">Details</th> <!-- View Details button -->
+    </tr>
     </tr>
     </thead>
     <tbody>
@@ -36,6 +38,12 @@
                 <form action="{{ url_for('purchase.purchase_add', product_id=product.id) }}" method="POST">
                     <input type="submit" value="Purchase" class="btn btn-primary"/>
                 </form>
+            </td>
+            <td>
+                <!-- Add the "View Details" link -->
+                <a href="{{ url_for('product.detail', product_id=product.id) }}" class="btn btn-info">
+                    View Details
+                </a>
             </td>
         </tr>
         {% endfor %}

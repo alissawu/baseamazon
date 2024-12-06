@@ -44,3 +44,20 @@ WHERE available = :available
 
         # Return a list of Product objects
         return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def get_reviews(product_id):
+        rows = app.db.execute('''
+            SELECT rating_num, rating_message, customer_id, review_date
+            FROM UserReviewsProduct
+            WHERE product_id = :product_id
+            ORDER BY review_date DESC
+        ''', product_id=product_id)
+
+        # return reviews as dictionary objects
+        return [{
+            'rating_num': row[0],
+            'rating_message': row[1],
+            'customer_id': row[2],
+            'review_date': row[3]
+        } for row in rows]

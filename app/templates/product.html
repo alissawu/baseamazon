@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Product Search Results</h1>
+<h1>{% if product %}{{ product.name }} Details{% else %}Product Search Results{% endif %}</h1>
 
+<!-- Product Search Results -->
+{% if products %}
 <table class='table table-hover table-bordered'>
     <thead>
         <tr>
             <th>Product ID</th>
             <th>Product Name</th>
             <th>Price</th>
-            <th>Description</th>
-            <th>Category</th>
             <th>Availability</th>
             <th>Details</th>
         </tr>
@@ -21,8 +21,6 @@
             <td>{{ product.id }}</td>
             <td>{{ product.name }}</td>
             <td>${{ product.price }}</td>
-            <td>{{ product.description }}</td>
-            <td>{{ product.category }}</td>
             <td>
                 {% if product.available %}
                     In Stock
@@ -31,7 +29,7 @@
                 {% endif %}
             </td>
             <td>
-                <a href="{{ url_for('products.product_details', pid=product.id) }}" class="btn btn-info">
+                <a href="{{ url_for('product.detail', product_id=product.id) }}" class="btn btn-info">
                     View Details
                 </a>
             </td>
@@ -39,4 +37,78 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
+
+<!-- Detailed Product View -->
+{% if product %}
+<div class="container mt-4">
+    <h2>Product Information</h2>
+    <p><strong>Price:</strong> ${{ product.price }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+    <p><strong>Category:</strong> {{ product.category }}</p>
+    <p><strong>Availability:</strong> {{ 'In Stock' if product.available else 'Out of Stock' }}</p>
+</div>
+
+<!-- Adding Reviews Section -->
+<h2>Product Reviews</h2>
+
+<!-- Display existing reviews -->
+{% if reviews %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Reviewer</th>
+                <th>Rating</th>
+                <th>Message</th>
+                <th>Date</th>
+                {% if current_user.is_authenticated %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td>{{ review.customer_id }}</td> <!-- Replace with review.fullname if available -->
+                <td>{{ review.rating_num }}/5</td>
+                <td>{{ review.rating_message }}</td>
+                <td>{{ review.review_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                {% if current_user.is_authenticated and review.customer_id == current_user.id %}
+                    <td>
+                        <a href="{{ url_for('product_rating.edit_review', pid=product.id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url_for('product_rating.delete_review', pid=product.id) }}" class="btn btn-danger">Delete</a>
+                    </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No reviews available for this product. Be the first to review!</p>
+{% endif %}
+
+
+<!-- Add a review form -->
+{% if current_user.is_authenticated %}
+    <h3>Add Your Review</h3>
+    <form method="POST" action="{{ url_for('product_rating.insert_data') }}">
+        <div class="form-group">
+            <label for="stars">Rating (1-5):</label>
+            <input type="number" id="stars" name="stars" class="form-control" min="1" max="5" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Message:</label>
+            <textarea id="description" name="description" class="form-control" rows="3" maxlength="255" required></textarea>
+        </div>
+        <!-- Hidden input for the product ID -->
+        <input type="hidden" name="pid" value="{{ product.id }}">
+        <button type="submit" class="btn btn-success">Submit Review</button>
+    </form>
+{% else %}
+    <p><a href="{{ url_for('users.login') }}">Log in</a> to add a review.</p>
+{% endif %}
+
+</div>
+{% endif %}
+
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, current_app as app
 from flask_login import current_user
 from flask import Blueprint
+from app.models.product import Product  # Assuming Product model is defined in your app
 from flask import jsonify
 
 bp = Blueprint('product_rating', __name__)
@@ -53,7 +54,7 @@ def edit_review(pid):
 
     # Fetch review details for the current user and product
     ratings = app.db.execute('''
-        SELECT rating_message, rating_num, image_url 
+        SELECT rating_message, rating_num 
         FROM UserReviewsProduct 
         WHERE customer_ID = :uid AND product_ID = :pid
     ''', uid=uid, pid=pid)
@@ -123,37 +124,36 @@ def add_review(pid):
     uid = current_user.id   
     return render_template('add_product_review.html', pid=pid)
 
-# Function to insert a new review into the database
-@bp.route('/insert_pr', methods=['GET', 'POST'])
+@bp.route('/insert_pr', methods=['POST'])
 def insert_data():
-    # Ensure the request is valid
-    if request.method == 'POST':
-        # Get inputs for the new review
-        description = request.form.get('description')
-        stars = request.form.get('stars')
-        uid = current_user.id
-        pid = request.form.get('pid')
-        image_url = request.form.get('image_url')
+    # Validate and insert review
+    description = request.form.get('description')
+    stars = request.form.get('stars')
+    pid = request.form.get('pid')  # Product ID
+    uid = current_user.id  # Current user ID
 
-        try:
-            # Validate inputs
-            if not (1 <= int(stars) <= 5):
-                raise ValueError("Stars must be between 1 and 5.")
+    try:
+        # Validate inputs
+        if not (1 <= int(stars) <= 5):
+            flash("Rating must be between 1 and 5.", "danger")
+            return redirect(url_for('product.detail', product_id=pid))  # Redirect to product page
 
-            if len(description) > MAX_DESCRIPTION_LENGTH:
-                raise ValueError(f"Description exceeds the maximum length of {MAX_DESCRIPTION_LENGTH} characters.")
+        if len(description) > MAX_DESCRIPTION_LENGTH:
+            flash(f"Review exceeds the maximum length of {MAX_DESCRIPTION_LENGTH} characters.", "danger")
+            return redirect(url_for('product.detail', product_id=pid))
 
-            # Insert the review into the database
-            insert_query = '''
-                INSERT INTO UserReviewsProduct (customer_ID, product_ID, rating_message, rating_num, review_date, image_url)
-                VALUES (:uid, :pid, :description, :stars, current_timestamp, :image_url)
-            '''
-            app.db.execute(insert_query, description=description, stars=stars, pid=pid, uid=uid, image_url=image_url)
+        # Insert review into the database
+        insert_query = '''
+            INSERT INTO UserReviewsProduct (customer_ID, product_ID, rating_message, rating_num, review_date)
+            VALUES (:uid, :pid, :description, :stars, current_timestamp)
+        '''
+        app.db.execute(insert_query, uid=uid, pid=pid, description=description, stars=stars)
 
-            # Redirect back to the detailed product page
-            return redirect(url_for('products.product_details', pid=pid))
+        # Redirect to product details page with success message
+        flash("Review submitted successfully!", "success")
+        return redirect(url_for('product.detail', product_id=pid))
 
-        except (ValueError, Exception) as error:
-            flash(f"Error: {error}", "danger")
+    except Exception as e:
+        flash(f"Error submitting review: {e}", "danger")
+        return redirect(url_for('product.detail', product_id=pid))  # Redirect on failure
 
-    return render_template('add_review.html')

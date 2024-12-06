@@ -19,9 +19,9 @@ SELECT pg_catalog.setval('public.wishes_id_seq', (SELECT MAX(id)+1 FROM Wishes),
 SELECT pg_catalog.setval('public.sellers_id_seq', (SELECT MAX(acct_ID)+1 FROM Seller), false);
 
 -- Load UserReviewsProduct
-\COPY UserReviewsProduct FROM 'db/data/UserReviewsProduct.csv' WITH DELIMITER ',' NULL '' CSV;
+\COPY UserReviewsProduct FROM 'UserReviewsProduct.csv' WITH DELIMITER ',' NULL '' CSV;
 SELECT pg_catalog.setval('public.userreviewsproduct_id_seq', (SELECT MAX(id)+1 FROM UserReviewsProduct), true);
 
 -- Load UserReviewsSeller
-\COPY UserReviewsSeller FROM 'db/data/UserReviewsSeller.csv' WITH DELIMITER ',' NULL '' CSV;
+\COPY UserReviewsSeller FROM 'UserReviewsSeller.csv' WITH DELIMITER ',' NULL '' CSV;
 SELECT pg_catalog.setval('public.userreviewsseller_id_seq', (SELECT MAX(id)+1 FROM UserReviewsSeller), true);
