@@ -45,6 +45,13 @@
     <h2>Product Information</h2>
     <p><strong>Price:</strong> ${{ product.price }}</p>
     <p><strong>Availability:</strong> {{ 'In Stock' if product.available else 'Out of Stock' }}</p>
+
+    <!-- Display Review Summary -->
+    <div class="review-summary mt-3">
+        <h4>Reviews</h4>
+        <p><strong>Average Rating:</strong> {{ avg_rating|round(1) }}/5</p>  <!-- Rounded average rating -->
+        <p><strong>Number of Reviews:</strong> {{ review_count }}</p>
+    </div>
 </div>
 
 <!-- Adding Reviews Section -->

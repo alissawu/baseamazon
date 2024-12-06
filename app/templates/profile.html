@@ -73,4 +73,11 @@
 
     <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
 </form>
+
+<h2>Your Reviews</h2>
+<p>
+    <a href="{{ url_for('feedback.user_feedback') }}" class="btn btn-primary">View and Manage Your Reviews</a>
+</p>
+
+
 {% endblock %}

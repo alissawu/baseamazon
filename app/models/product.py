@@ -61,5 +61,26 @@ WHERE available = :available
             'customer_id': row[3],
             'review_date': row[4]
         } for row in rows]
+     # Method to calculate average rating for a product
+    @staticmethod
+    def average_rating(product_id):
+        rows = app.db.execute('''
+            SELECT AVG(rating_num) 
+            FROM UserReviewsProduct
+            WHERE product_id = :product_id
+        ''', product_id=product_id)
+
+        return rows[0][0] if rows[0][0] is not None else 0
+    
+    # Method to calculate the number of reviews for a product
+    @staticmethod
+    def review_count(product_id):
+        rows = app.db.execute('''
+            SELECT COUNT(*) 
+            FROM UserReviewsProduct
+            WHERE product_id = :product_id
+        ''', product_id=product_id)
+
+        return rows[0][0] if rows else 0
 
 
