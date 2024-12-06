@@ -29,7 +29,7 @@ WHERE Products.id = :id
             name=row[1],
             price=row[2],
             available=row[3],
-            category_id=row[4]
+            category_name=row[4]
         )
         return None
 
