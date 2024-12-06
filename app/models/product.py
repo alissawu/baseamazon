@@ -25,7 +25,7 @@ WHERE id = :id
 
     @staticmethod
     
-    def get_all(available=True, sort_by_price=False, sort_order='ASC'):
+    def get_all(available=True, sort_by_price=False, sort_order='ASC', category_id=None):
         query = '''
         SELECT Products.id, Products.name, Products.price, Products.available, Category.name
         FROM Products
