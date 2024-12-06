@@ -16,7 +16,7 @@ class Product:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT Product.id, Product.name, Product.price, Product.available, Category.name
+SELECT Products.id, Products.name, Products.price, Products.available, Category.name
 FROM Products
 JOIN Category ON Category.id = Products.category_id
 WHERE id = :id
