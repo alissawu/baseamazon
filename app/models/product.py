@@ -8,6 +8,11 @@ class Product:
         self.price = price
         self.available = available
         self.category_name= category_name
+
+class Category:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
     
     @classmethod
     def get_all_by_uid(cls, uid):
