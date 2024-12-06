@@ -2,12 +2,11 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, available, category_id, category_name):
+    def __init__(self, id, name, price, available, category_name):
         self.id = id
         self.name = name
         self.price = price
         self.available = available
-        self.category_id= category_id
         self.category_name= category_name
     
     @classmethod
