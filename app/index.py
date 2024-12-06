@@ -15,7 +15,7 @@ def index():
     available = request.args.get('available', True) # default is true
     category_id = request.args.get('category')
     products = Product.get_all(available=available, sort_by_price=True, sort_order=sort_order, category_id=category_id)
-    categories = get_all_categories()
+    categories = Product.get_all_categories()
 
     acct_ID = request.args.get('acct_ID')
     seller_products = None
