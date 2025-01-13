@@ -1,0 +1,5 @@
+# Push to GitLab
+git push origin main
+
+# Push to GitHub
+git push github main

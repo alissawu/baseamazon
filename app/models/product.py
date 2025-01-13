@@ -64,15 +64,14 @@ class Product:
     @staticmethod
     def get_top_k_expensive(k):
         rows = app.db.execute('''
-            SELECT id, name, price, available
-            FROM Products
-            ORDER BY price DESC
+            SELECT P.id, P.name, P.price, C.name AS category_name, P.available
+            FROM Products P
+            JOIN Category C ON P.category_id = C.id
+            ORDER BY P.price DESC
             LIMIT :k
         ''', k=k)
-
-        # Return a list of Product objects
         return [Product(*row) for row in rows]
-    
+
     @staticmethod
     def get_reviews(product_id, sort_by="review_date", order="desc"):
         valid_columns = ["rating_num", "review_date"]

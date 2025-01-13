@@ -110,6 +110,22 @@ def checkout():
         return redirect(url_for('purchase.purchase'))
     else:
         return redirect(url_for('users.login'))
+    
+@bp.route('/cart/user', methods=['GET'])
+def cart_user():
+    user_id = request.args.get('acct_ID', type=int)
+
+    if user_id is None:
+        flash("User ID is required.")
+        return redirect(url_for('index.index'))
+
+    # Fetch the cart items for the given user ID
+    items = Cart.get_all_by_uid(user_id)
+
+    # Render the cart.html template even if the cart is empty
+    return render_template('cart.html', items=items, humanize_time=humanize_time)
+
+
 
 @bp.app_template_filter('humanize_time')
 def humanize_time(dt):
