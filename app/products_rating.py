@@ -143,10 +143,6 @@ def insert_data():
     uid = current_user.id  # Current user ID
 
     try:
-        # Check if the user can review the product
-        if not Product.can_review_product(uid, pid):
-            flash("You can only review products you have purchased.", "danger")
-            return redirect(url_for('product.detail', product_id=pid))
 
         # Check if the user already reviewed this product
         existing_review = app.db.execute('''
@@ -157,6 +153,10 @@ def insert_data():
 
         if existing_review:
             flash("You have already submitted a review for this product.", "warning")
+            return redirect(url_for('product.detail', product_id=pid))
+        # Check if the user can review the product
+        if not Product.can_review_product(uid, pid):
+            flash("You can only review products you have purchased.", "danger")
             return redirect(url_for('product.detail', product_id=pid))
 
         # Validate inputs

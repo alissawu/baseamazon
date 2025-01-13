@@ -23,10 +23,10 @@
       <td>{{ item[3] | humanize_time }}</td>
       <td>{{ item[4] }}</td>
       <td>
-        <a href="{{ url_for('product.detail', product_id=item[4]) }}" class="btn btn-info">Review Product</a>
+        <a href="{{ url_for('product.detail', product_id=item[5]) }}" class="btn btn-info">Review Product</a>
       </td>
       <td>
-        <a href="{{ url_for('sellers.seller_detail', seller_id=item[5]) }}" class="btn btn-info">Review Seller</a>
+        <a href="{{ url_for('sellers.seller_detail', seller_id=item[4]) }}" class="btn btn-info">Review Seller</a>
       </td>
     </tr>
     {% endfor %}

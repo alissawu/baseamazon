@@ -100,6 +100,7 @@ def add_products():
         price = request.form.get('price') or request.args.get('price')
         available = request.form.get('available') or request.args.get('available')
         quantity = request.form.get('quantity') or request.args.get('quantity')
+        category_id = request.form.get('category_id') or request.args.get('category_id')
         
         # check if price is a decimal
         try:
@@ -112,7 +113,7 @@ def add_products():
             return redirect(url_for('sellers.add_products', acct_ID=acct_ID))
         
         # add product to the database
-        success = Seller.add_product_to_database(acct_ID, product_ID, name, price, available, quantity)
+        success = Seller.add_product_to_database(acct_ID, product_ID, name, price, available, quantity, category_id)
 
         if success:
             # get the updated list of products for the seller
@@ -198,6 +199,7 @@ def seller_detail(seller_id):
     )
 
 
+
 @bp.route('/seller/<int:seller_id>/review', methods=['POST'])
 def add_review(seller_id):
     if not current_user.is_authenticated:
@@ -236,7 +238,6 @@ def add_review(seller_id):
 
     return redirect(url_for('sellers.seller_detail', seller_id=seller_id))
 
-
 @bp.route('/seller/<int:seller_id>/review/delete', methods=['POST'])
 def delete_review(seller_id):
     """Delete a review for a seller."""
@@ -250,3 +251,5 @@ def delete_review(seller_id):
     flash('Review deleted successfully!', 'success')
 
     return redirect(url_for('sellers.seller_detail', seller_id=seller_id))
+
+
