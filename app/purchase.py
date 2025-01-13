@@ -108,15 +108,14 @@ def purchase_remove(purchase_id):
 @bp.route('/purchase/user', methods=['GET'])
 def get_purchases_by_uid():
     if current_user.is_authenticated:
-        # Get the user ID from the request
         uid = request.args.get('acct_ID')
         if uid is None:
-            return jsonify({'error': 'User ID not provided'}), 400
-        
-        # Fetch all purchases by the specified user ID (uid)
+            flash('User ID not provided.', 'warning')
+            return redirect(url_for('purchase.purchase'))
+
         items = Purchase.get_all_by_uid(uid)
-        if not items:
-            return jsonify({'error': 'No purchases found for this user.'}), 404
-        return render_template('purchase.html', items=items, humanize_time=humanize_time)
+
+        # Render template even if no purchases
+        return render_template('purchase.html', items=items, empty=not items, humanize_time=humanize_time)
     else:
         return redirect(url_for('users.login'))
